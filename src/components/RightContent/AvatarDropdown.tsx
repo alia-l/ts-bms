@@ -1,13 +1,12 @@
-import { outLogin } from '@/services/ant-design-pro/api';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
-import type { ItemType } from 'antd/lib/menu/hooks/useItems';
-import { stringify } from 'querystring';
-import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
+import { LogoutOutlined, RightOutlined } from '@ant-design/icons';
+import { Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
+import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { removeLocalStorage } from '@/utils/utils';
+import { staff_info, STAFF_ROLE } from '@/conf/conf';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -16,35 +15,32 @@ export type GlobalHeaderRightProps = {
 /**
  * 退出登录，并且将当前的 url 保存
  */
-const loginOut = async () => {
-  await outLogin();
-  const { query = {}, search, pathname } = history.location;
+const loginOut = () => {
+  removeLocalStorage(staff_info);
+  const { query = {}, pathname } = history.location;
   const { redirect } = query;
-  // Note: There may be security issues, please note
   if (window.location.pathname !== '/user/login' && !redirect) {
     history.replace({
       pathname: '/user/login',
       search: stringify({
-        redirect: pathname + search,
+        redirect: pathname,
       }),
     });
   }
 };
 
-const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
+const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick = useCallback(
-    (event: MenuInfo) => {
+    (event) => {
       const { key } = event;
-      if (key === 'logout') {
-        setInitialState((s) => ({ ...s, currentUser: undefined }));
+      if (key === 'logout' && initialState) {
+        setInitialState({ ...initialState, currentUser: null });
         loginOut();
-        return;
       }
-      history.push(`/account/${key}`);
     },
-    [setInitialState],
+    [initialState, setInitialState],
   );
 
   const loading = (
@@ -64,47 +60,46 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   }
 
   const { currentUser } = initialState;
+  const { staffVo } = currentUser;
 
-  if (!currentUser || !currentUser.name) {
+  if (!staffVo?.id) {
     return loading;
   }
 
-  const menuItems: ItemType[] = [
-    ...(menu
-      ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: '个人中心',
-          },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: '个人设置',
-          },
-          {
-            type: 'divider' as const,
-          },
-        ]
-      : []),
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
-    },
-  ];
-
   const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick} items={menuItems} />
+    <Menu
+      className={styles.menu}
+      selectedKeys={[]}
+      items={[
+        {
+          key: 'logout',
+          label: '退出登录',
+          icon: <LogoutOutlined />,
+          onClick: (event) => onMenuClick(event),
+        },
+      ]}
+    ></Menu>
   );
-
   return (
-    <HeaderDropdown overlay={menuHeaderDropdown}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <span className={`${styles.name} anticon`}>欢迎，</span>
+        <span className={`${styles.name} anticon`}>
+          {STAFF_ROLE.find((it) => it.value === staffVo?.roleId)?.label}
+        </span>
+        <span className={`${styles.name} anticon`}>{staffVo?.name}</span>
       </span>
-    </HeaderDropdown>
+      <HeaderDropdown overlay={menuHeaderDropdown}>
+        <div className={styles.outBtn}>
+          <RightOutlined />
+        </div>
+      </HeaderDropdown>
+    </div>
   );
 };
 

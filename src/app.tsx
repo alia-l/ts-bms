@@ -1,105 +1,156 @@
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { PageLoading } from '@ant-design/pro-layout';
+import { message, notification } from 'antd';
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
+import { history } from 'umi';
 import RightContent from '@/components/RightContent';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
-import defaultSettings from '../config/defaultSettings';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import Footer from '@/components/Footer';
+import { getDeviceId, getLocalStorage, setMD5 } from './utils/utils';
+import { staff_info } from './conf/conf';
+import routes from '../config/routes';
+import { ProfileOutlined, SettingOutlined } from '@ant-design/icons';
 
-const isDev = process.env.NODE_ENV === 'development';
+const iconMapping = [{ icon: <ProfileOutlined /> }, { icon: <SettingOutlined /> }];
+
 const loginPath = '/user/login';
-
-/** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
 
-/**
- * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
-  loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  currentUser?: any;
+  fetchUserInfo?: () => Promise<any | null>;
+  clientWidth?: any;
 }> {
-  const fetchUserInfo = async () => {
-    try {
-      const msg = await queryCurrentUser();
-      return msg.data;
-    } catch (error) {
-      history.push(loginPath);
-    }
-    return undefined;
+  const fetchUserInfo = () => {
+    return new Promise((resolve, reject) => {
+      let userInfo: string = getLocalStorage(staff_info);
+      userInfo = userInfo ? JSON.parse(userInfo) : null;
+      if (userInfo) {
+        resolve(userInfo);
+      } else {
+        reject();
+      }
+    });
   };
-  // 如果不是登录页面，执行
+  // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
-      settings: defaultSettings,
+      settings: {},
+      clientWidth: document.body.clientWidth || document.body.offsetWidth || 0,
     };
   }
   return {
     fetchUserInfo,
-    settings: defaultSettings,
+    settings: {},
+    clientWidth: document.body.clientWidth || document.body.offsetWidth || 0,
   };
 }
 
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+const platform: number = 7;
+const appVersion: string = '1.0.0';
+const protocolVersion: number = 2;
+const deviceId: string = getDeviceId();
+const bigSmarter: string = setMD5(`${deviceId}_${platform}_${appVersion}`);
+const userStr: string = getLocalStorage(staff_info);
+const user: any = userStr ? JSON.parse(userStr) : null;
+const token: string = user?.token;
+const authHeaderInterceptor = (url: string, options?: Record<string, any>) => {
+  const authHeader: any = {
+    platform,
+    appVersion,
+    protocolVersion,
+    deviceId,
+    bigSmarter,
+    token,
+    ContentType: 'application/x-www-form-urlencoded',
+  };
+
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
+const responseInterceptors = (response: Response) => {
+  return response;
+};
+
+const filterMenuPermission = (per = [], list = routes) => {
+  if (per.length <= 0) return [];
+  const iPer = per.join(',');
+  const iList = JSON.parse(JSON.stringify(list));
+  return iList.filter((i: any) => {
+    const flag = iPer.indexOf(i.key) > -1;
+    if (flag && (i.routes || []).length > 0) {
+      i.routes = filterMenuPermission(per, i.routes);
+    }
+    return flag;
+  });
+};
+
+export const request: RequestConfig = {
+  errorHandler: (error: any) => {
+    const { response } = error;
+
+    if (!response) {
+      notification.error({
+        description: '您的网络发生异常，无法连接服务器',
+        message: '网络异常',
+      });
+    }
+    throw error;
+  },
+  requestInterceptors: [authHeaderInterceptor],
+  responseInterceptors: [responseInterceptors],
+  timeout: 60000,
+  errorConfig: {
+    adaptor: (res: Record<string, any>) => {
+      return {
+        ...res,
+        data: res?.data,
+        success: res?.resultStatus?.code === 1000,
+        errorMessage: res?.resultStatus?.message,
+      };
+    },
+  },
+};
+
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.staffVo?.name,
     },
+    footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }
     },
-    links: isDev
-      ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-          <Link to="/~docs" key="docs">
-            <BookOutlined />
-            <span>业务组件文档</span>
-          </Link>,
-        ]
-      : [],
-    menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
-    // 增加一个 loading 的状态
-    childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-          {!props.location?.pathname?.includes('/login') && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
-        </>
-      );
+    menu: {
+      params: initialState,
+      request: async () => {
+        const menu = initialState?.currentUser?.menu.split(',');
+        if (menu.length <= 0) {
+          message.error(`该账号无菜单权限，请求超管设置权限后重新登录`);
+        } else {
+          const m = filterMenuPermission(menu);
+          m.forEach((it: any, index: number) => {
+            it.icon = iconMapping.find((_, i) => i === index)?.icon;
+          });
+          console.log(m);
+          return m;
+        }
+      },
+      menuHeaderRender: undefined,
+      ...initialState?.settings,
     },
-    ...initialState?.settings,
   };
 };
