@@ -4,7 +4,6 @@ import { message, notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
 import { getDeviceId, getLocalStorage, setMD5 } from './utils/utils';
 import { staff_info } from './conf/conf';
 import routes from '../config/routes';
@@ -127,7 +126,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.staffVo?.name,
     },
-    footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       if (!initialState?.currentUser && location.pathname !== loginPath) {

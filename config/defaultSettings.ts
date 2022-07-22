@@ -12,10 +12,13 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'bms后台管理系统',
+  title: '',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://cdn.kangarooread.com/crm-static/img/logo-1.png',
   iconfontUrl: '',
+  menu: {
+    locale: false,
+  },
 };
 
 export default Settings;

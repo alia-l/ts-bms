@@ -2,6 +2,22 @@
 /* eslint-disable */
 
 declare namespace API {
+  /**
+   * @description 登录请求参数
+   */
+  type LoginParams = {
+    phone?: string;
+    password?: string;
+  };
+
+  /**
+   * @description 分页请求参数
+   */
+  type PageParams = {
+    size?: number;
+    pageNum?: number;
+  };
+
   type CurrentUser = {
     name?: string;
     avatar?: string;
@@ -21,17 +37,6 @@ declare namespace API {
     };
     address?: string;
     phone?: string;
-  };
-
-  type LoginResult = {
-    status?: string;
-    type?: string;
-    currentAuthority?: string;
-  };
-
-  type PageParams = {
-    current?: number;
-    pageSize?: number;
   };
 
   type RuleListItem = {
@@ -56,44 +61,13 @@ declare namespace API {
     success?: boolean;
   };
 
-  type FakeCaptcha = {
-    code?: number;
-    status?: string;
-  };
-
-  type LoginParams = {
-    username?: string;
-    password?: string;
-  };
-
-  type ErrorResponse = {
-    /** 业务约定的错误码 */
-    errorCode: string;
-    /** 业务上的错误信息 */
-    errorMessage?: string;
-    /** 业务上的请求是否成功 */
-    success?: boolean;
-  };
-
-  type NoticeIconList = {
-    data?: NoticeIconItem[];
-    /** 列表的内容总数 */
-    total?: number;
-    success?: boolean;
-  };
-
-  type NoticeIconItemType = 'notification' | 'message' | 'event';
-
-  type NoticeIconItem = {
-    id?: string;
-    extra?: string;
-    key?: string;
-    read?: boolean;
-    avatar?: string;
-    title?: string;
-    status?: string;
-    datetime?: string;
-    description?: string;
-    type?: NoticeIconItemType;
+  type Result = {
+    data?: any;
+    dataCount?: number | null;
+    hasMore?: boolean | null;
+    resultStatus?: {
+      code?: number;
+      message?: string;
+    };
   };
 }
