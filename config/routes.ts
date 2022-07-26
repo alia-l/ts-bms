@@ -1,6 +1,40 @@
 export default [
+  //菜单路由
+  {
+    name: '用户管理',
+    path: '/user/list',
+    key: 'user_list',
+    component: './user/List',
+    showMenu: true,
+  },
+  {
+    name: '权限管理',
+    path: '/',
+    key: 'auth',
+    showMenu: true,
+    routes: [
+      {
+        name: '角色管理',
+        path: '/auth/role',
+        key: 'auth_role',
+        component: './AuthManagement/Role',
+      },
+      {
+        name: '账号管理',
+        path: '/auth/account',
+        key: 'auth_account',
+        component: './AuthManagement/Account',
+      },
+      {
+        name: '日志管理',
+        path: '/auth/journal',
+        key: 'auth_journal',
+        component: './AuthManagement/Journal',
+      },
+    ],
+  },
+
+  //子页路由
   { name: '登录', path: '/user/login', component: './user/Login', layout: false },
-  { name: '用户管理', path: '/user/list', key: 'user_list', component: './user/List' },
-  { component: './404' },
-  { path: '/', redirect: '/user/list' },
+  { component: './404', layout: false },
 ];

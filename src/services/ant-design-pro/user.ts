@@ -5,7 +5,7 @@ import { fetch } from '@/services/fetch';
  * @param params
  */
 
-export function processLoginStaff(params: API.LoginParams) {
+export function processLoginStaff(params: UserAPI.LoginParams) {
   return fetch('/user/staff_login', {
     method: 'POST',
     data: { ...params },

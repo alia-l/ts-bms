@@ -3,7 +3,7 @@ import { message } from 'antd';
 import React from 'react';
 import { ProFormText, LoginForm } from '@ant-design/pro-form';
 import { history, useModel } from 'umi';
-import { processLoginStaff } from '@/services/ant-design-pro/user';
+import { processLoginStaff } from '@/services/UserService/api';
 import { setLocalStorage } from '@/utils/utils';
 import { staff_info } from '@/conf/conf';
 import styles from './index.less';
@@ -24,13 +24,12 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const staffInfo = await initialState?.fetchUserInfo?.();
-
     if (staffInfo) {
       await setInitialState({ ...initialState, currentUser: staffInfo });
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: UserAPI.LoginParams) => {
     try {
       const res = await processLoginStaff(values);
 
@@ -52,7 +51,7 @@ const Login: React.FC = () => {
         <LoginForm
           title="BMS管理系统"
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as UserAPI.LoginParams);
           }}
         >
           <div

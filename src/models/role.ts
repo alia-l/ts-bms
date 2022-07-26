@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react';
 
 // 全局用法
-// const { xxx } = useModel('index', model => ({ xxx: model.xxx}));
+// const { xxx } = useModel('文件名', model => ({ xxx: model.xxx}));
 
-export default function useAuthModel() {
-  const [token, setToken] = useState('');
+export default () => {
+  const [token, setToken] = useState('111');
 
   const logout = useCallback(() => {
     setToken('');
@@ -14,4 +14,4 @@ export default function useAuthModel() {
     token,
     logout,
   };
-}
+};

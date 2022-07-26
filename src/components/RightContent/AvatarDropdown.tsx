@@ -78,7 +78,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
           onClick: (event) => onMenuClick(event),
         },
       ]}
-    ></Menu>
+    />
   );
   return (
     <div
@@ -88,9 +88,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = () => {
       }}
     >
       <span className={`${styles.action} ${styles.account}`}>
-        <span className={`${styles.name} anticon`}>欢迎，</span>
         <span className={`${styles.name} anticon`}>
-          {STAFF_ROLE.find((it) => it.value === staffVo?.roleId)?.label}
+          <div style={{ marginRight: 5 }}>
+            {STAFF_ROLE.find((it) => it.value === staffVo?.roleId)?.label}
+          </div>
         </span>
         <span className={`${styles.name} anticon`}>{staffVo?.name}</span>
       </span>
