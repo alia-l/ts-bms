@@ -61,6 +61,9 @@ export function deleteRole(id: number) {
 export function getAccountList(params: API.PageParams) {
   return fetch('/user/staff/staff_list', {
     params: { ...params },
+    headers: {
+      v2: true,
+    },
   });
 }
 
@@ -103,5 +106,14 @@ export function deleteAccount(staffId: number) {
 export function resetPwd(staffId: number) {
   return fetch('/user/staff/re_set_password', {
     params: { staffId },
+  });
+}
+
+export function getUserList(params: UserAPI.UserListParams) {
+  return fetch('/user/user/user_list', {
+    params: { ...params },
+    headers: {
+      v2: true,
+    },
   });
 }

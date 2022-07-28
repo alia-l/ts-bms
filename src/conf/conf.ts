@@ -73,3 +73,13 @@ export const STAFF_ROLE = [
   { value: 6, label: '管理员' },
   { value: 8, label: '口试审核人员' },
 ];
+
+export const LEAD_LEVEL: any[] = [
+  { value: 0, label: '普通会员/未迁移', color: '' },
+  { value: 1, label: '一星领读者', color: 'green' },
+  { value: 2, label: '二星领读者', color: 'blue' },
+  { value: 3, label: '三星领读者', color: 'geekblue' },
+  { value: 4, label: '四星领读者', color: 'purple' },
+  { value: 5, label: '五星领读者', color: 'gold' },
+  { value: 6, label: '领读者导师', color: 'red' },
+];

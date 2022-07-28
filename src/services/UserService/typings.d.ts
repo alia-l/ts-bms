@@ -21,6 +21,44 @@ declare namespace UserAPI {
   };
 
   /**
+   * @description 【用户列表】请求参数
+   */
+  type UserListParams = {
+    size: number;
+    pageNum: number;
+    phone: string;
+    id: string;
+    nickname: string;
+  };
+
+  /**
+   * @description 【用户列表】响应数据
+   */
+  type UserListData = {
+    avatar?: string;
+    createTime?: number;
+    equalLevel?: any;
+    equalNickname?: any;
+    equalPhone?: any;
+    equalUserId?: any;
+    extraCount?: number;
+    hadAllowed?: boolean;
+    id?: number;
+    level?: number;
+    nickname?: string;
+    phone?: string;
+    role?: number;
+    roleValue?: string;
+    serviceName?: string;
+    serviceType?: number;
+    superLevel?: number;
+    superNickname?: string;
+    superPhone?: string;
+    superiorId?: number;
+    unstable?: any;
+  };
+
+  /**
    * @description 【登录】响应数据
    */
   type LoginData = {
