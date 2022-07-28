@@ -143,7 +143,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
           m.forEach((it: any, index: number) => {
             it.icon = iconMapping.find((_, i) => i === index)?.icon;
           });
-          console.log(m);
           return m;
         }
       },
