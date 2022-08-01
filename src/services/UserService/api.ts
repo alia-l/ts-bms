@@ -135,3 +135,15 @@ export function getUserDetail(userId: number) {
   });
 }
 
+/**
+ * @description 获取订阅列表
+ */
+export function getUserServiceList(params: UserAPI.SubscribeParams) {
+  return fetch(`/user/bms/user_service/list`, {
+    params: { ...params },
+    headers: {
+      v2: true,
+    },
+  });
+}
+

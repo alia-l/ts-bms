@@ -2,7 +2,7 @@ export default [
   { name: '登录', path: '/login', component: './Login', layout: false },
 
   //子页路由
-  { name: '用户详情', path: '/user/detail/:id', component: './UserManagement/Detail' },
+  { name: '用户详情', path: '/user/detail/:id/:phone', component: './UserManagement/Detail' },
 
   //菜单路由
   {

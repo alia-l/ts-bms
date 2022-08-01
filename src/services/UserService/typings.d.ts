@@ -31,9 +31,45 @@ declare namespace UserAPI {
     nickname: string;
   };
 
+  /**
+   * @description【订阅列表】请求参数
+   */
+  type SubscribeParams = {
+    phone?: string,
+    nickname?: string
+    userCardNo?: string
+    createTimeStart?: string
+    createTimeEnd?: string
+    pageNum?: number;
+    size?: number;
+  }
+
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【订阅列表】响应数据
+   */
+  type SubscribeData = {
+    activateTime?: number
+    cardName?: string
+    createTimeMill?: number
+    expireTime?: number
+    id?: number
+    leftCount?: number
+    nickname?: string
+    pauseEndTime?: any
+    pauseTime?: any
+    phone?: string
+    serviceCount?: number
+    serviceId?: number
+    serviceName?: string
+    status?: number
+    usedCount?: any
+    userCardNo?: string
+    key?: any
+  }
 
   /**
    * @description 【用户列表】响应数据

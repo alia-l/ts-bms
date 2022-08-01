@@ -1,7 +1,9 @@
 import React from 'react';
-
-const BagTabPane: React.FC = () => {
-  return <div>
-  </div>;
+export type InfoProps = {
+  id?: number;
+  phone?: string;
 };
-export default BagTabPane;
+const LotteryDrawTabPane: React.FC<InfoProps> = () => {
+  return  <div/>;
+};
+export default LotteryDrawTabPane;

@@ -1,4 +1,5 @@
 export const staff_info = 'staff_info';
+export const TIME_FORMAT = { FULL: 'YYYY-MM-DD HH:mm:ss' };
 
 /**
  * @description 按钮权限
@@ -64,6 +65,8 @@ export const BTN_ACCESS_GROUPS = [
   { value: 'new_service_refund', label: '新服务订阅退款' },
 ];
 
+
+//权限类型
 export const STAFF_ROLE = [
   { value: 1, label: '超级管理员' },
   { value: 2, label: '仓库管理员' },
@@ -74,6 +77,7 @@ export const STAFF_ROLE = [
   { value: 8, label: '口试审核人员' },
 ];
 
+// 领读者等级
 export const LEAD_LEVEL: any[] = [
   { value: 0, label: '普通会员/未迁移', color: '' },
   { value: 1, label: '一星领读者', color: 'green' },
@@ -82,4 +86,37 @@ export const LEAD_LEVEL: any[] = [
   { value: 4, label: '四星领读者', color: 'purple' },
   { value: 5, label: '五星领读者', color: 'gold' },
   { value: 6, label: '领读者导师', color: 'red' },
+];
+
+export const COUPON_SOURCE: any[] = [
+  { value: 1, label: '首页优惠券弹窗列表' },
+  { value: 2, label: '后台发放' },
+  { value: 3, label: '积分商城兑换' },
+  { value: 6, label: '他人转赠' },
+  { value: 7, label: '活动领取' },
+  { value: 101, label: '2019年双十一活动' },
+];
+
+export const COUPON_USED_STATUS: any[] = [
+  { value: -5, label: '已过期', status: 'default' },
+  { value: -1, label: '已转赠', status: 'default' },
+  { value: 0, label: '已使用', status: 'success' },
+  { value: 8, label: '未激活', status: 'processing' },
+  { value: 10, label: '未使用', status: 'processing' },
+];
+
+// 服务状态
+export const cardServiceStatus: any[] = [
+  { name: '未激活', value: 0 },
+  { name: '服务暂停中', value: 2 },
+  { name: '冻结已恢复', value: 5 },
+  { name: '已激活', value: 10 },
+  { name: '服务过期', value: 45 },
+  { name: '押金完成', value: 47 },
+  { name: '服务完成', value: 50 },
+  { name: '已失效', value: 51 },
+  { name: '已失效', value: 52 },
+  { name: '已冻结', value: -5 },
+  { name: '无效', value: -10 },
+  { name: '内测用户退回', value: -66 },
 ];

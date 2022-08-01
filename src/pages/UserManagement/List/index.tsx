@@ -59,10 +59,10 @@ const UserList: React.FC = () => {
       valueType: 'option',
       width: 180,
       render: (_, record) => {
-        const { id } = record;
+        const { id, phone } = record;
         return (
           <Button type={'link'} size={'small'} onClick={() => {
-            history.push(`/user/detail/${id}`);
+            history.push(`/user/detail/${id}/${phone}`);
             setSearch(false);
           }}>
             详情
