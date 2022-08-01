@@ -1,44 +1,34 @@
 // @ts-ignore
 /* eslint-disable */
 
-declare namespace UserAPI {
+declare namespace OrderAPI {
   /**
-   * @description 【登录】请求参数
+   * @description 【书袋列表】请求参数
    */
-  type LoginParams = {
+  type BagListParams = {
+    confirmTimeEnd?: string;
+    confirmTimeStart?: string;
+    createTimeEnd?: string;
+    createTimeStart?: string;
+    endTime?: string;
+    orderCode?: string;
     phone?: string;
-    password?: string;
+    startTime?: string;
+    trackingCode?: string;
+    pageNum?: number;
+    size?: number;
   };
 
-  /**
-   * @description 【更新/新增账号】请求参数
-   */
-  type AccountParams = {
-    id?: number;
-    name?: string;
-    phone?: string;
-    roleId?: number;
-  };
 
-  /**
-   * @description 【用户列表】请求参数
-   */
-  type UserListParams = {
-    size: number;
-    pageNum: number;
-    phone: string;
-    id: string;
-    nickname: string;
-  };
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /**
-   * @description 【用户列表】响应数据
+   * @description 【书袋列表】响应数据
    */
-  type UserListData = {
+  type BagListData = {
     avatar?: string;
     createTime?: number;
     equalLevel?: any;

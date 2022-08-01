@@ -1,9 +1,12 @@
-import { useCallback } from 'react';
-import { getUserList } from '@/services/UserService/api';
+import { useCallback, useState } from 'react';
+import { getUserDetail, getUserList } from '@/services/UserService/api';
 
 export default () => {
+  const [search, setSearch] = useState<boolean>(false);
+  const [detailInfoLoading, setDetailInfoLoading] = useState<boolean>(false);
+  const [detail, setDetail] = useState<UserAPI.UserDetailData>();
   /**
-   * @description 获取列表
+   * @description 获取用户列表
    */
   const fetchGetList = useCallback(async (p: any) => {
     const params = {
@@ -21,7 +24,30 @@ export default () => {
     };
   }, []);
 
+  /**
+   * @description 获取用户列表详情
+   */
+  const fetchGetUserDetail = useCallback(async (id: number) => {
+    setDetailInfoLoading(true);
+    try {
+      const res: API.Result = await getUserDetail(id);
+      if (res) {
+        setDetail(res.data);
+      }
+    } catch (e) {
+
+    } finally {
+      setDetailInfoLoading(false);
+    }
+  }, []);
+
   return {
     fetchGetList,
+    fetchGetUserDetail,
+    setSearch,
+    setDetailInfoLoading,
+    detailInfoLoading,
+    search,
+    detail,
   };
 };

@@ -11,7 +11,7 @@ import { ProfileOutlined, SettingOutlined } from '@ant-design/icons';
 
 const iconMapping = [{ icon: <ProfileOutlined /> }, { icon: <SettingOutlined /> }];
 
-const loginPath = '/user/login';
+const loginPath = '/login';
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
@@ -95,7 +95,6 @@ const filterMenuPermission = (per = [], list = routes) => {
 export const request: RequestConfig = {
   errorHandler: (error: any) => {
     const { response } = error;
-
     if (!response) {
       notification.error({
         description: '您的网络发生异常，无法连接服务器',

@@ -19,9 +19,9 @@ const loginOut = () => {
   removeLocalStorage(staff_info);
   const { query = {}, pathname } = history.location;
   const { redirect } = query;
-  if (window.location.pathname !== '/user/login' && !redirect) {
+  if (window.location.pathname !== '/login' && !redirect) {
     history.replace({
-      pathname: '/user/login',
+      pathname: '/login',
       search: stringify({
         redirect: pathname,
       }),

@@ -5,13 +5,9 @@ import { useModel } from '@@/plugin-model/useModel';
 import { LEAD_LEVEL } from '@/conf/conf';
 import { history } from 'umi';
 
-const toDetail = (id: number) => {
-  history.push(`/user/detail/${id}`);
-};
-
 const UserList: React.FC = () => {
   const actionRef = useRef<ActionType>();
-  const { fetchGetList } = useModel('userModel');
+  const { fetchGetList, setSearch, search } = useModel('userModel');
   const columns: ProColumns<UserAPI.UserListData>[] = [
     {
       title: 'ID',
@@ -65,7 +61,10 @@ const UserList: React.FC = () => {
       render: (_, record) => {
         const { id } = record;
         return (
-          <Button type={'link'} size={'small'} onClick={() => toDetail(id as number)}>
+          <Button type={'link'} size={'small'} onClick={() => {
+            history.push(`/user/detail/${id}`);
+            setSearch(false);
+          }}>
             详情
           </Button>
         );
@@ -79,11 +78,39 @@ const UserList: React.FC = () => {
         columns={columns}
         actionRef={actionRef}
         search={{
-          labelWidth: 120,
-          defaultCollapsed: false,
+          labelWidth: 80,
+          collapsed: false,
+          collapseRender: () => null,
+          optionRender: (searchConfig, formProps) => [
+            <Button
+              key='reset'
+              onClick={() => {
+                formProps.form?.resetFields(); // 重置表单
+                setSearch(false);
+              }}
+            >
+              {searchConfig.resetText}
+            </Button>,
+            <Button
+              type='primary'
+              key='search'
+              onClick={() => {
+                formProps.form?.submit();
+                setSearch(true);
+              }}
+            >
+              {searchConfig.searchText}
+            </Button>,
+          ],
         }}
-        rowKey="id"
-        request={fetchGetList}
+        rowKey='id'
+        request={search ? fetchGetList : async () =>
+          ({
+            data: [],
+            success: true,
+            total: 0,
+          })
+        }
       />
     </PageContainer>
   );

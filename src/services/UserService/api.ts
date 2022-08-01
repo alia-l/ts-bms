@@ -109,6 +109,10 @@ export function resetPwd(staffId: number) {
   });
 }
 
+/**
+ * @description 用户列表
+ * @param params
+ */
 export function getUserList(params: UserAPI.UserListParams) {
   return fetch('/user/user/user_list', {
     params: { ...params },
@@ -117,3 +121,17 @@ export function getUserList(params: UserAPI.UserListParams) {
     },
   });
 }
+
+/**
+ * @description 用户列表详情信息
+ * @param userId
+ */
+export function getUserDetail(userId: number) {
+  return fetch('/user/user/get_user_info_detail', {
+    params: { userId },
+    headers: {
+      v2: true,
+    },
+  });
+}
+
