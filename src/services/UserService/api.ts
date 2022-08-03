@@ -147,3 +147,27 @@ export function getUserServiceList(params: UserAPI.SubscribeParams) {
   });
 }
 
+/**
+ * @description 获取抽奖次数列表
+ * @param params
+ */
+export function userLotteryCountList(params: UserAPI.LotteryCountParams) {
+  return fetch('/user/bms/activity/user_lottery_count', {
+    params: { ...params },
+  });
+}
+
+/**
+ * @description 获取关系记录列表
+ * @param userId
+ */
+export function getUserReferRecord(userId: number) {
+  return fetch('/user/user/get_user_refer_record', {
+    params: { userId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+

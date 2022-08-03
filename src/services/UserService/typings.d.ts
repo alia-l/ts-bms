@@ -44,9 +44,52 @@ declare namespace UserAPI {
     size?: number;
   }
 
+  /**
+   * @description 【抽奖记录】请求参数
+   */
+  type LotteryCountParams = {
+    userId: number
+  }
+
+
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  type UserReferListData = {
+    createTime?: number
+    orderCode?: string
+    referId?: number
+    referLevel?: number
+    referNickname?: string
+    referPhone?: string
+    status?: number
+    type?: number
+  }
+
+  /**
+   * @description 【抽奖记录】响应数据
+   */
+  type LotteryCountData = {
+    activeCount?: number
+    goldAActiveCount?: number
+    goldACount?: number
+    goldBActiveCount?: number
+    goldBCount?: number
+    id?: number
+    nickname?: string
+    normalAActiveCount?: number
+    normalACount?: number
+    normalActiveCount?: number
+    normalBActiveCount?: number
+    normalBCount?: number
+    normalCount?: number
+    phone?: string
+    silverActiveCount?: number
+    silverCount?: number
+    totalCount?: number
+    userId?: number
+  }
 
   /**
    * @description 【订阅列表】响应数据

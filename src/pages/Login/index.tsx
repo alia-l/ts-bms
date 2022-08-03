@@ -21,7 +21,7 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
-
+  const { updateBtnAuthList } = useModel('index');
   const fetchUserInfo = async () => {
     const staffInfo = await initialState?.fetchUserInfo?.();
     if (staffInfo) {
@@ -35,8 +35,11 @@ const Login: React.FC = () => {
 
       if (res) {
         const { data } = res || {};
+        const { function: btnAuth } = data;
         setLocalStorage(staff_info, JSON.stringify(data));
         await fetchUserInfo();
+        const btnAuthList = (btnAuth && btnAuth.split(',')) || []
+        updateBtnAuthList(btnAuthList)
         message.success(`登陆成功`);
         goto();
       }
@@ -49,7 +52,7 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          title="BMS管理系统"
+          title='BMS管理系统'
           onFinish={async (values) => {
             await handleSubmit(values as UserAPI.LoginParams);
           }}
@@ -60,7 +63,7 @@ const Login: React.FC = () => {
             }}
           >
             <ProFormText
-              name="phone"
+              name='phone'
               fieldProps={{
                 size: 'large',
                 prefix: <UserOutlined className={styles.prefixIcon} />,
@@ -74,7 +77,7 @@ const Login: React.FC = () => {
               ]}
             />
             <ProFormText.Password
-              name="password"
+              name='password'
               fieldProps={{
                 size: 'large',
                 prefix: <LockOutlined className={styles.prefixIcon} />,

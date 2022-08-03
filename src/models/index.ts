@@ -1,17 +1,14 @@
 import { useState, useCallback } from 'react';
 
-// 全局用法
-// const { xxx } = useModel('文件名', model => ({ xxx: model.xxx}));
-
 export default () => {
-  const [token, setToken] = useState('');
+  const [btnAuthList, setBtnAuthList] = useState('');
 
-  const logout = useCallback(() => {
-    setToken('');
+  const updateBtnAuthList = useCallback((list: any) => {
+    setBtnAuthList(list);
   }, []);
 
   return {
-    token,
-    logout,
+    updateBtnAuthList,
+    btnAuthList,
   };
 };

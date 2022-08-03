@@ -9,7 +9,7 @@ import RelationTabPane from '../components/RelationTabPane';
 import PointTabPane from '../components/PointTabPane';
 import CouponTabPane from '../components/CouponTabPane';
 import LotteryDrawTabPane from '../components/LotteryDrawTabPane';
-import BagTabPane from '@/pages/userManagement/components/BagTabPane';
+import BagTabPane from '@/pages/UserManagement/components/BagTabPane';
 import moment from 'moment';
 
 const TAB_LIST = [

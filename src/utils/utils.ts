@@ -1,5 +1,7 @@
 // @ts-ignore
 import md5 from 'js-md5';
+import { staff_info } from '@/conf/conf';
+
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
@@ -126,3 +128,20 @@ export const removeLocalStorage = (k: string) => {
 export const removeSessionStorage = (k: string) => {
   window.sessionStorage.removeItem(k);
 };
+
+export const checkBtnAuth = (key: any) => {
+  if (!key) return false;
+  let list = [];
+  let staffInfo = getLocalStorage(staff_info);
+  staffInfo = staffInfo ? JSON.parse(staffInfo) : {};
+  // @ts-ignore
+  const { function: btnAuth } = staffInfo;
+  if (btnAuth) {
+    list = btnAuth.split(',');
+  }
+  if (list.length < 1) return false;
+  return list.includes(key);
+};
+
+
+

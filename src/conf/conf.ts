@@ -88,6 +88,7 @@ export const LEAD_LEVEL: any[] = [
   { value: 6, label: '领读者导师', color: 'red' },
 ];
 
+//优惠券来源
 export const COUPON_SOURCE: any[] = [
   { value: 1, label: '首页优惠券弹窗列表' },
   { value: 2, label: '后台发放' },
@@ -97,6 +98,7 @@ export const COUPON_SOURCE: any[] = [
   { value: 101, label: '2019年双十一活动' },
 ];
 
+//优惠券状态
 export const COUPON_USED_STATUS: any[] = [
   { value: -5, label: '已过期', status: 'default' },
   { value: -1, label: '已转赠', status: 'default' },
@@ -120,3 +122,53 @@ export const cardServiceStatus: any[] = [
   { name: '无效', value: -10 },
   { name: '内测用户退回', value: -66 },
 ];
+
+//关系
+export const REFER_STATUS: any[] = [
+  { value: 0, label: '小程序注册绑定' },
+  { value: 1, label: 'APP注册绑定' },
+  { value: 2, label: '加库存未激活' },
+  { value: 3, label: '激活' },
+  { value: 4, label: '兑换码兑换绑定' },
+  { value: 5, label: '引流付费' },
+  { value: 6, label: '正价课程' },
+  { value: 7, label: '长期绑定' },
+  { value: 8, label: '过期' },
+  { value: 9, label: '预签约' },
+  { value: 10, label: '签约' },
+  { value: 11, label: '签约扣费' },
+  { value: 12, label: '关系变更' },
+];
+
+export const ROUTER_MAP = {
+  DAMAGE_ORDER: {
+    type: 10,
+    name: '追损单',
+    router: '/damage/list',
+  },
+  DAMAGE_REPORT: {
+    type: 11,
+    name: '报损单',
+    router: '/reportDamage/list',
+  },
+  GOODS_IN_ORDER: {
+    type: 6,
+    name: '入库单',
+    router: '/goodsIn/list',
+  },
+  OVERDUE_ORDER: {
+    type: 4,
+    name: '逾期单',
+    router: '/overdue/list',
+  },
+  PURCHASE_ORDER: {
+    type: 5,
+    name: '购买单',
+    router: '/purchase/detail',
+  },
+  RETURN_ORDER: {
+    type: 3,
+    name: '回收单',
+    router: '/return/list',
+  },
+};
