@@ -43,6 +43,7 @@ const BagTabPane: React.FC<InfoProps> = (props) => {
     subBagOrderList,
     bagOrderDetail,
     submitLoading,
+    referList,
   } = useModel('userModel');
   //书袋详情drawer
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
@@ -69,6 +70,7 @@ const BagTabPane: React.FC<InfoProps> = (props) => {
       title: '书袋编码',
       dataIndex: 'orderCode',
       key: 'orderCode',
+      copyable: true,
     },
     {
       title: '状态',
@@ -112,9 +114,9 @@ const BagTabPane: React.FC<InfoProps> = (props) => {
             type={`link`}
             key={'relation'}
             size={'small'}
-            onClick={() => {
-              setBagOrderId(id);
+            onClick={async () => {
               setRelationVisible(true);
+              await fetchGetLinkedOrderList(id as number);
             }}>
             关联订单
           </Button>,
@@ -709,7 +711,7 @@ const BagTabPane: React.FC<InfoProps> = (props) => {
       <ProTable<OrderAPI.LinkRelationData>
         search={false}
         toolBarRender={false}
-        request={(v) => fetchGetLinkedOrderList(v, bagOrderId as number)}
+        dataSource={referList}
         size={'small'}
         rowKey='orderId'
         loading={loading}

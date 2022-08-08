@@ -145,3 +145,58 @@ export function getLinkedOrder(bagOrderId: number) {
     },
   });
 }
+
+/**
+ * @desc 获取订阅卡订单详情
+ * @returns {Promise}
+ * @param params
+ */
+export function getUserServiceCardDetail(params: OrderAPI.SubscribeDetailParams) {
+  return fetch('/order/bms/bag_order/list', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 手动生成下一个书袋
+ * @param {*} serviceCardId
+ */
+export function manualCatchNextBag(serviceCardId: number) {
+  return fetch('/order/bms/bag_order/bagOrder/manual_catch_next_bag', {
+    params: { serviceCardId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 恢复用户优惠券
+ * @param userCouponId
+ * @returns {*}
+ */
+export function recoverUserCoupon(userCouponId: number) {
+  return fetch(`/order/bms/user_coupon/recover_coupon/${userCouponId}`, {
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 更新用户优惠券过期时间
+ * @param userCouponId
+ * @param expireTime
+ * @returns {*}
+ */
+export function updateUserCouponExtendExpired(userCouponId: number, expireTime: string) {
+  return fetch(`/order/bms/user_coupon/extend_expired/${userCouponId}`, {
+    params: { expireTime },
+    headers: {
+      'v2': true,
+    },
+  });
+}

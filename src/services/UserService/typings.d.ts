@@ -51,11 +51,44 @@ declare namespace UserAPI {
     userId: number
   }
 
+  /**
+   * @description 【书袋列表-详情-订阅管理详情-冻结书袋】请求参数
+   */
+  type FreezeOrderParams = {
+    userServiceCardId: number
+    remark: string
+  }
+
+  /**
+   * @description 【书袋列表-详情-订阅管理详情-增加延期】请求参数
+   */
+  type ExpiresTimeParams = {
+    monthCnt: string,
+    remark: string
+    userServiceCardId: number
+  }
+
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  /**
+   * @description 【用户详情-订阅详情-延期记录列表】响应数据
+   */
+  type ExpiredTimeData = {
+    createTime?: number
+    id: number
+    remark: string
+    serviceDuration?: number
+    staffId?: number
+    staffName: string
+    unit: number
+    unitStr?: string
+  }
 
+  /**
+   * @description 【用户详情-关系记录列表】响应数据
+   */
   type UserReferListData = {
     createTime?: number
     orderCode?: string
@@ -136,6 +169,7 @@ declare namespace UserAPI {
     serviceType?: number;
     superLevel?: number;
     superNickname?: string;
+    superRealName?: string;
     superPhone?: string;
     superiorId?: number;
     unstable?: any;
@@ -225,6 +259,7 @@ declare namespace UserAPI {
     realName?: string
     referLevel?: number
     referNickname?: string
+    referRealName?: string
     referPhone?: string
     referStatusValue?: string
     referUserId?: number

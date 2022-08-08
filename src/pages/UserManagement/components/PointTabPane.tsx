@@ -16,7 +16,7 @@ const PointTabPane: React.FC<InfoProps> = (props) => {
       dataIndex: 'exchangeOrderCode',
       key: 'exchangeOrderCode',
       render: (text) => {
-        return text ? text : <Tag color='red'>积分获取</Tag>;
+        return text !== '-' ? text : <Tag color='red'>积分获取</Tag>;
       },
       hideInSearch: true,
       width: 220,

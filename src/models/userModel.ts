@@ -5,6 +5,11 @@ import {
   getUserReferRecord,
   getUserServiceList,
   userLotteryCountList,
+  freezeOrder,
+  addStopCount,
+  notFreezeOrder,
+  extendExpiredTime,
+  getExtendRecordList,
 } from '@/services/UserService/api';
 import {
   anewReport,
@@ -14,7 +19,14 @@ import {
   getBagSubOrderList,
   getLinkedOrder,
   getUserCouponList,
-  getUserPointList, subBagAddRemark, updateBagOrderAddress, updateOverdueTime,
+  getUserPointList,
+  getUserServiceCardDetail,
+  manualCatchNextBag,
+  recoverUserCoupon,
+  subBagAddRemark,
+  updateBagOrderAddress,
+  updateOverdueTime,
+  updateUserCouponExtendExpired,
 } from '@/services/OrderService/api';
 import { message } from 'antd';
 
@@ -24,7 +36,14 @@ export default () => {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [detail, setDetail] = useState<UserAPI.UserDetailData>({});
   const [bagOrderDetail, setBagOrderDetail] = useState<OrderAPI.BagOrderDetailData>();
+  const [subscribeDetail, setSubscribeDetail] = useState<OrderAPI.SubscribeDetailData>();
   const [subBagOrderList, setSubBagOrderList] = useState<OrderAPI.BagSubOrderList[]>();
+  const [subscribeBagOrderList, setSubscribeBagOrderList] = useState<OrderAPI.SubScribeDetail_BagOrderList[]>();
+  const [subscribeBigGiftList, setSubscribeBigGiftList] = useState<OrderAPI.SubScribeDetail_BigGiftList[]>();
+  const [deviceList, setSubscribeDeviceList] = useState<OrderAPI.SubScribeDetail_DeviceList[]>();
+  const [referList, setReferList] = useState<any>();
+  const [expiredTimeList, setExpiredTimeList] = useState<UserAPI.ExpiredTimeData[]>();
+
 
   /**
    * @description 获取用户列表
@@ -48,31 +67,35 @@ export default () => {
   /**
    * @description 获取关联订单
    */
-  const fetchGetLinkedOrderList = useCallback(async (p: any, bagOrderId: number) => {
-    const res: API.Result = await getLinkedOrder(bagOrderId);
-    const { data } = res;
-    const {
-      damageOrderList = [],
-      damageReportList = [],
-      goodsInOrderList = [],
-      overdueOrderList = [],
-      purchaseOrderList = [],
-      returnOrderList = [],
-    } = data || {};
+  const fetchGetLinkedOrderList = useCallback(async (bagOrderId: number) => {
+    setLoading(true);
+    try {
+      const res: API.Result = await getLinkedOrder(bagOrderId);
+      const { data } = res;
+      const {
+        damageOrderList = [],
+        damageReportList = [],
+        goodsInOrderList = [],
+        overdueOrderList = [],
+        purchaseOrderList = [],
+        returnOrderList = [],
+      } = data || {};
 
-    const arr = [
-      ...damageOrderList,
-      ...damageReportList,
-      ...goodsInOrderList,
-      ...overdueOrderList,
-      ...purchaseOrderList,
-      ...returnOrderList,
-    ];
-    return {
-      data: arr || [],
-      success: res?.resultStatus?.code === 1000,
-      total: res?.dataCount as number,
-    };
+      const arr = [
+        ...damageOrderList,
+        ...damageReportList,
+        ...goodsInOrderList,
+        ...overdueOrderList,
+        ...purchaseOrderList,
+        ...returnOrderList,
+      ];
+      setReferList(arr);
+    } catch (e) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+
   }, []);
 
   /**
@@ -297,6 +320,169 @@ export default () => {
     }
   }, []);
 
+  /**
+   * @description  获取订阅详情
+   */
+  const fetchGetUserServiceCardDetail = useCallback(async (params: OrderAPI.SubscribeDetailParams) => {
+    setLoading(true);
+    try {
+      const res: API.Result = await getUserServiceCardDetail(params);
+      if (res) {
+        setSubscribeDetail(res?.data || {});
+        setSubscribeBagOrderList(res.data?.bagOrderList);
+        setSubscribeBigGiftList(res.data?.bigGiftList);
+        setSubscribeDeviceList(res.data?.deviceList);
+      }
+    } catch (e) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  生成下一个书袋
+   */
+  const fetchManualCatchNextBag = useCallback(async (serviceCardId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await manualCatchNextBag(serviceCardId);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  冻结订阅卡
+   */
+  const fetchFreezeOrder = useCallback(async (params: UserAPI.FreezeOrderParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await freezeOrder(params);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  解冻订阅卡
+   */
+  const fetchNotFreezeOrder = useCallback(async (userServiceCardId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await notFreezeOrder(userServiceCardId);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  增加一次暂停次数
+   */
+  const fetchAddStopCount = useCallback(async (userServiceCardId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await addStopCount(userServiceCardId);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  增加一次暂停次数
+   */
+  const fetchExtendExpiredTime = useCallback(async (params: UserAPI.ExpiresTimeParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await extendExpiredTime(params);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  增加一次暂停次数
+   */
+  const fetchGetExtendRecordList = useCallback(async (userServiceCardId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await getExtendRecordList(userServiceCardId);
+      if (res) {
+        const { data } = res;
+        setExpiredTimeList(data);
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  恢复用户优惠券
+   */
+  const fetchRecoverUserCoupon = useCallback(async (userCouponId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await recoverUserCoupon(userCouponId);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  更新用户优惠券过期时间
+   */
+  const fetchUpdateUserCouponExtendExpired = useCallback(async (userCouponId: number, expireTime: string) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await updateUserCouponExtendExpired(userCouponId, expireTime);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
 
   return {
     fetchGetList,
@@ -314,6 +500,15 @@ export default () => {
     fetchCancelConfirm,
     fetchUpdateBagOrderAddress,
     fetchGetLinkedOrderList,
+    fetchGetUserServiceCardDetail,
+    fetchManualCatchNextBag,
+    fetchNotFreezeOrder,
+    fetchFreezeOrder,
+    fetchAddStopCount,
+    fetchExtendExpiredTime,
+    fetchGetExtendRecordList,
+    fetchRecoverUserCoupon,
+    fetchUpdateUserCouponExtendExpired,
     setDetailInfoLoading,
     detailInfoLoading,
     detail,
@@ -322,5 +517,11 @@ export default () => {
     subBagOrderList,
     loading,
     submitLoading,
+    referList,
+    subscribeDetail,
+    subscribeBagOrderList,
+    subscribeBigGiftList,
+    deviceList,
+    expiredTimeList,
   };
 };

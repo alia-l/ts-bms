@@ -50,14 +50,21 @@ declare namespace OrderAPI {
   /**
    * @description 【书袋列表-详情-更新地址】请求参数
    */
-  type UpdateAddressParams ={
-    province?:string
-    city?:string
-    county?:string
-    contactName?:string
-    contactPhone?:string
-    address?:string
-    bagOrderId:number
+  type UpdateAddressParams = {
+    province?: string
+    city?: string
+    county?: string
+    contactName?: string
+    contactPhone?: string
+    address?: string
+    bagOrderId: number
+  }
+
+  /**
+   * @description 【书袋列表-详情-订阅管理详情】请求参数
+   */
+  type SubscribeDetailParams = {
+    userServiceCardId?: number
   }
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,76 +90,76 @@ declare namespace OrderAPI {
    * @description 【订阅详情】响应数据
    */
   type SubscribeDetailData = {
-    activateTime: number
-    amount: number
-    amountValue: string
-    bagOrderList: SubScribeDetail_BagOrderList
-    bigGiftList: SubScribeDetail_BigGiftList
-    cardId: any
-    cardName: any
-    continuousSub: boolean
-    createTime: number
-    deviceList: SubScribeDetail_DeviceList
-    expireTime: number
-    guaranteeInfos: any
-    leftCount: number
-    pauseEndTime: any
-    pauseTime: any
-    phone: string
-    serviceCount: number
-    serviceId: number
-    serviceName: string
-    status: number
-    usedCount: number
-    userId: number
-    userServiceCardNo: string
-    username: string
+    activateTime?: number
+    amount?: number
+    amountValue?: string
+    bagOrderList?: SubScribeDetail_BagOrderList
+    bigGiftList?: SubScribeDetail_BigGiftList
+    cardId?: any
+    cardName?: any
+    continuousSub?: boolean
+    createTime?: number
+    deviceList?: SubScribeDetail_DeviceList
+    expireTime?: number
+    guaranteeInfos?: any
+    leftCount?: number
+    pauseEndTime?: any
+    pauseTime?: any
+    phone?: string
+    serviceCount?: number
+    serviceId?: number
+    serviceName?: string
+    status?: number
+    usedCount?: number
+    userId?: number
+    userServiceCardNo?: string
+    username?: string
   }
 
   /**
    * @description 【订阅详情-BagOrderList】响应数据
    */
   type SubScribeDetail_BagOrderList = {
-    contactName: any
-    contactPhone: any
-    createTime: number
-    damageOrderId: any
-    damageOrderStatus: any
-    expressTime: any
-    id: number
-    orderCode: string
-    preExpressTime: any
-    sequence: number
-    status: number
-    statusStr: string
-    userId: string
-    userServiceCardId: string
+    contactName?: any
+    contactPhone?: any
+    createTime?: number
+    damageOrderId?: any
+    damageOrderStatus?: any
+    expressTime?: any
+    id?: number
+    orderCode?: string
+    preExpressTime?: any
+    sequence?: number
+    status?: number
+    statusStr?: string
+    userId?: string
+    userServiceCardId?: string
   }
 
   /**
    * @description 【订阅详情-BigGiftList】响应数据
    */
   type SubScribeDetail_BigGiftList = {
-    deliverTime: number
-    expressCode: string
-    expressCompany: string
-    gddCode: string
-    orderCode: string
-    orderInclude: string
-    pushTime: number
-    signTime: number
-    status: number
+    deliverTime?: number
+    expressCode?: string
+    expressCompany?: string
+    gddCode?: string
+    orderCode?: string
+    orderInclude?: string
+    pushTime?: number
+    signTime?: number
+    status?: number
   }
 
   /**
    * @description 【订阅详情-DeviceList】响应数据
    */
   type SubScribeDetail_DeviceList = {
-    bindingTime: number
-    deviceId: string
-    gddStatusValue: string
-    id: number
-    status: number
+    bindingTime?: number
+    deviceId?: string
+    gddStatusValue?: string
+    id?: number
+    status?: number
   }
 
   /**
@@ -266,7 +273,7 @@ declare namespace OrderAPI {
     id?: number
     orderId?: any
     remark?: any
-    status?: number
+    status: number
     transferTime?: any
     transferable?: number
     usedTime?: any

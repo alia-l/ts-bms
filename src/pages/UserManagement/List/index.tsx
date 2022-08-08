@@ -18,6 +18,17 @@ const UserList: React.FC = () => {
         title: '用户姓名',
         dataIndex: 'nickname',
         key: 'nickname',
+        hideInTable: true,
+      },
+      {
+        title: '用户姓名',
+        dataIndex: 'realName',
+        key: 'realName',
+        render: (text, record) => {
+          const { nickname } = record;
+          return `${nickname || '-'}/${text || ''}`;
+        },
+        hideInSearch: true,
       },
       {
         title: '用户手机',
@@ -43,12 +54,12 @@ const UserList: React.FC = () => {
         key: 'superNickname',
         hideInSearch: true,
         render: (_, record) => {
-          const { superLevel, superNickname, superPhone } = record;
+          const { superLevel, superNickname, superPhone, superRealName } = record;
           const item = LEAD_LEVEL.find((it) => it.value === superLevel) || {};
           return (
             <>
               <Tag color={item?.color}>{item?.label}</Tag>
-              {superNickname}/{superPhone}
+              {superPhone && <span>{superNickname}/{superPhone}/{superRealName}</span>}
             </>
           );
         },

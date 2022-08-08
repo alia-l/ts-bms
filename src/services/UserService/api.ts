@@ -170,4 +170,65 @@ export function getUserReferRecord(userId: number) {
   });
 }
 
+/**
+ * @desc 冻结订阅卡
+ * @returns {Promise}
+ * @param params
+ */
+export function freezeOrder(params: UserAPI.FreezeOrderParams) {
+  return fetch('/user/user/service/suspend', {
+    method: 'POST',
+    data: { ...params },
+  });
+}
+
+/**
+ * @desc 解除冻结订阅卡
+ * @returns {Promise}
+ * @param userServiceCardId
+ */
+export function notFreezeOrder(userServiceCardId: number) {
+  return fetch('/user/user/service/recover', {
+    method: 'POST',
+    data: { userServiceCardId },
+  });
+}
+
+/**
+ * @desc 增加暂停次数
+ * @param {string} [userServiceCardId='']
+ * @returns
+ */
+export function addStopCount(userServiceCardId: number) {
+  return fetch('/user/user/incr_stop_count', {
+    params: { userServiceCardId },
+  });
+}
+
+/**
+ * @description 延长服务周期
+ * @param params
+ * @returns {*}
+ */
+export function extendExpiredTime(params: UserAPI.ExpiresTimeParams) {
+  return fetch('/user/bms/user_service/extend_expired_time', {
+      method: 'POST',
+      data: { ...params },
+      headers: {
+        'v2': true,
+      },
+    },
+  );
+}
+
+/**
+ * @description 延期记录
+ * @param userServiceCardId
+ * @returns {*}
+ */
+export function getExtendRecordList(userServiceCardId: number) {
+  return fetch(`/user/bms/user_service/extend_record/${userServiceCardId}`);
+}
+
+
 

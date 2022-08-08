@@ -140,6 +140,7 @@ export const REFER_STATUS: any[] = [
   { value: 12, label: '关系变更' },
 ];
 
+// 关联订单
 export const ROUTER_MAP = {
   DAMAGE_ORDER: {
     type: 10,
@@ -172,3 +173,49 @@ export const ROUTER_MAP = {
     router: '/return/list',
   },
 };
+
+// 大礼包状态
+export const BIG_GIFT_STATUS: any[] = [
+  { value: -99, label: '无记录' },
+  { value: -30, label: '退款' },
+  { value: -20, label: '系统取消' },
+  { value: -10, label: '用户取消' },
+  { value: 0, label: '待支付' },
+  { value: 5, label: '积分已支付' },
+  { value: 10, label: '全部支付' },
+  { value: 11, label: '发货审单异常' },
+  { value: 12, label: '发货审单' },
+  { value: 13, label: '待确认发货' },
+  { value: 15, label: '待发货' },
+  { value: 20, label: '已发货' },
+  { value: 30, label: '已收获' },
+  { value: 50, label: ' 已完成' },
+];
+
+//谷兜兜状态
+export const GDD_STATUS: any[] = [
+  { value: -10, label: '无效' },
+  { value: 5, label: '待激活' },
+  { value: 10, label: '已激活' },
+  { value: 15, label: '待归还' },
+  { value: 20, label: '已过期' },
+  { value: 45, label: '挂失' },
+  { value: 50, label: '已归还' },
+];
+
+//老服务延期时间
+export const MONTH_LIST = [
+  { label: '10天', value: 10 },
+  { label: '15天', value: 15 },
+  { label: '20天', value: 20 },
+  { label: '1个月', value: 30 },
+  { label: '2个月', value: 60 },
+  { label: '3个月', value: 90 },
+  { label: '4个月', value: 120 },
+  { label: '5个月', value: 150 },
+  { label: '6个月', value: 180 },
+  { label: '7个月', value: 210 },
+  { label: '8个月', value: 240 },
+  { label: '9个月', value: 270 },
+  { label: '10个月', value: 300 }
+]

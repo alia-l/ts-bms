@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel } from '@@/plugin-model/useModel';
-import { Badge, Tag } from 'antd';
+import { Badge, Button, DatePicker, Modal, Tag } from 'antd';
 import { COUPON_SOURCE, COUPON_USED_STATUS, TIME_FORMAT } from '@/conf/conf';
 import moment from 'moment';
 
@@ -9,9 +9,13 @@ export type InfoProps = {
   id?: number;
   phone?: string;
 };
+const { confirm } = Modal;
 const CouponTabPane: React.FC<InfoProps> = (props) => {
   const actionRef = useRef<ActionType>();
-  const { fetchGetCouponList } = useModel('userModel');
+  const { fetchGetCouponList, fetchRecoverUserCoupon, fetchUpdateUserCouponExtendExpired } = useModel('userModel');
+  const [visible, setVisible] = useState<boolean>(false);
+  const [dateTime, setDateTime] = useState<string>('');
+  const [currentId, setCurrentId] = useState<number>();
   const columns: ProColumns<OrderAPI.CouponListData>[] = [
     {
       title: 'ID',
@@ -74,30 +78,42 @@ const CouponTabPane: React.FC<InfoProps> = (props) => {
       key: 'couponOperation',
       valueType: 'option',
       width: 180,
-      // render: (_, record: OrderAPI.BagListData) => {
-      //   const { id } = record;
-      //   return [
-      //     <Button
-      //       type={`link`}
-      //       key={'detail'}
-      //       size={'small'}
-      //       onClick={() => {
-      //       }}>
-      //       书袋详情
-      //     </Button>,
-      //     <Button
-      //       type={`link`}
-      //       key={'relation'}
-      //       size={'small'}
-      //       onClick={() => {
-      //
-      //       }}>
-      //       关联订单
-      //     </Button>,
-      //   ];
-      // },
+      render: (_, record: OrderAPI.CouponListData) => {
+        const { id, status } = record;
+        return <>
+          {
+            status === -5 && <Button type={'link'} onClick={() => {
+              confirm({
+                title: '是否恢复该优惠券',
+                onOk: async () => {
+                  await fetchRecoverUserCoupon(id as number);
+                  actionRef.current?.reload();
+                },
+              });
+            }}>恢复</Button>
+          }
+          {
+            status > 0 && <Button type={'link'} onClick={() => {
+              setVisible(true);
+              setCurrentId(id);
+            }}>延期</Button>
+          }
+        </>;
+      },
     },
   ];
+
+  const submitTime = async () => {
+    await fetchUpdateUserCouponExtendExpired(currentId as number, dateTime);
+    setVisible(false);
+    actionRef.current?.reload();
+    setDateTime('');
+  };
+
+  const changeDataTime = (v: any) => {
+    const time = moment(v).format(TIME_FORMAT.FULL);
+    setDateTime(time);
+  };
 
   return <div>
     <ProTable<OrderAPI.CouponListData>
@@ -108,6 +124,22 @@ const CouponTabPane: React.FC<InfoProps> = (props) => {
       rowKey='id'
       request={(p) => fetchGetCouponList(p, props.id as number)}
     />
+    <Modal
+      title={'编辑时间'}
+      visible={visible}
+      onCancel={() => {
+        setVisible(false);
+        setDateTime('');
+      }}
+      onOk={() => submitTime()}
+      destroyOnClose={true}
+    >
+      <DatePicker
+        showTime
+        onChange={changeDataTime}
+        format={TIME_FORMAT.FULL}
+      />
+    </Modal>
   </div>;
 };
 export default CouponTabPane;
