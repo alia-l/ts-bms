@@ -292,6 +292,35 @@ export function cancelPhone(userId: number, phone: string) {
   });
 }
 
+/**
+ * @description 获取短信发送记录
+ * @param params
+ * @returns {*}
+ */
+export function getSendInfoList(params: UserAPI.TextTemplateParams) {
+  return fetch(`/user/bms/notify/sms/query_send_record`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 发送短信
+ * @param params
+ * @returns {*}
+ */
+export function sendSmsInfo(params: UserAPI.sendSmsInfoParams) {
+  return fetch(`/user/bms/notify/sms/send`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
 
 
 

@@ -30,6 +30,12 @@ export default [
         key: 'subscribe_list',
         component: './SubscribeManagement',
       },
+      {
+        name: '短信模版',
+        path: '/order/template/list',
+        key: 'text_template',
+        component: './TextTemplateManagement',
+      },
     ],
   },
   {

@@ -18,8 +18,6 @@ import { ROUTER_MAP } from '@/conf/conf';
 
 const { confirm } = Modal;
 
-
-
 const formItemLayout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 14 },

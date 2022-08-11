@@ -68,10 +68,44 @@ declare namespace UserAPI {
     userServiceCardId: number
   }
 
+  /**
+   * @description 【短信模版-列表】请求参数
+   */
+  type TextTemplateParams = {
+    createTimeStart?:string
+    createTimeEnd?:string
+    phone?:number
+    keyword?:number
+    pageNum?: number;
+    size?: number;
+  }
+
+  /**
+   *@description 【短信模版-发送短信】请求参数
+   */
+  type sendSmsInfoParams = {
+    phone:string
+    remark?:string
+    params?:any
+  }
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【短信模版-列表】响应数据
+   */
+  type TextTemplateData = {
+    content?: string
+    createTime: number
+    id: number
+    phone: string
+    staffId: number
+    staffName: string
+    status?: number
+  }
+
   /**
    * @description 【用户详情-解绑微信】响应数据
    */
