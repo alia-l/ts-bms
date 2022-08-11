@@ -7,9 +7,13 @@ import RightContent from '@/components/RightContent';
 import { getDeviceId, getLocalStorage, setMD5 } from './utils/utils';
 import { staff_info } from './conf/conf';
 import routes from '../config/routes';
-import { ProfileOutlined, SettingOutlined } from '@ant-design/icons';
+import { ProfileOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 
-const iconMapping = [{ icon: <ProfileOutlined /> }, { icon: <SettingOutlined /> }];
+const iconMapping = [
+  { icon: <UserOutlined /> },
+  { icon: <ProfileOutlined /> },
+  { icon: <SettingOutlined /> }
+];
 
 const loginPath = '/login';
 export const initialStateConfig = {

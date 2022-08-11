@@ -10,6 +10,10 @@ import {
   notFreezeOrder,
   extendExpiredTime,
   getExtendRecordList,
+  allowConfirm,
+  getAccountListByUserId,
+  unBindingPhone,
+  cancelPhone,
 } from '@/services/UserService/api';
 import {
   anewReport,
@@ -43,6 +47,7 @@ export default () => {
   const [deviceList, setSubscribeDeviceList] = useState<OrderAPI.SubScribeDetail_DeviceList[]>();
   const [referList, setReferList] = useState<any>();
   const [expiredTimeList, setExpiredTimeList] = useState<UserAPI.ExpiredTimeData[]>();
+  const [accountList, setAccountList] = useState<UserAPI.AccountListData[]>();
 
 
   /**
@@ -483,6 +488,86 @@ export default () => {
     }
   }, []);
 
+  /**
+   * @description  书袋特殊操作
+   */
+  const fetchAllowConfirm = useCallback(async (userId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await allowConfirm(userId);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  获取微信account
+   */
+  const fetchGetAccountListByUserId = useCallback(async (userId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await getAccountListByUserId(userId);
+      if (res) {
+        const { data } = res;
+        if (data) {
+          data.forEach((it: UserAPI.AccountListData) => {
+            it.value = it.id;
+            it.label = `${it.wechatNickname || it.nickname || ''} / ${
+              it.contactPhone
+            }`;
+          });
+        }
+        setAccountList(data);
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  解绑微信
+   */
+  const fetchUnBindingPhone = useCallback(async (userId: number, accountId: number) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await unBindingPhone(userId, accountId);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  强制换绑手机号
+   */
+  const fetchCancelPhone = useCallback(async (userId: number, phone: string) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await cancelPhone(userId, phone);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
 
   return {
     fetchGetList,
@@ -509,6 +594,10 @@ export default () => {
     fetchGetExtendRecordList,
     fetchRecoverUserCoupon,
     fetchUpdateUserCouponExtendExpired,
+    fetchAllowConfirm,
+    fetchGetAccountListByUserId,
+    fetchUnBindingPhone,
+    fetchCancelPhone,
     setDetailInfoLoading,
     detailInfoLoading,
     detail,
@@ -523,5 +612,6 @@ export default () => {
     subscribeBigGiftList,
     deviceList,
     expiredTimeList,
+    accountList,
   };
 };

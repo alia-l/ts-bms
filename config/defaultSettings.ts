@@ -10,7 +10,7 @@ const Settings: LayoutSettings & {
   layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
-  fixSiderbar: true,
+  fixSiderbar: false,
   colorWeak: false,
   title: '',
   pwa: false,

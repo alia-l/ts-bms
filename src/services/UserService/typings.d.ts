@@ -73,6 +73,39 @@ declare namespace UserAPI {
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /**
+   * @description 【用户详情-解绑微信】响应数据
+   */
+  type AccountListData = {
+    avatarAwardSkin: any
+    avatar: string
+    avatarCardSkin: any
+    avatarPendant: any
+    avatarSkin: any
+    birthday: any
+    city: string
+    contactPhone: string
+    country: string
+    followPublic: number
+    id: number
+    labelColor: any
+    lastLoginTime: string
+    nickname: string
+    parentTag: number
+    province: string
+    realName: any
+    sex: any
+    source: any
+    systemEnv: any
+    token: string
+    type: number
+    unionId: string
+    valueColor: any
+    wechatNickname: string
+    value: number
+    label: string
+  }
+
+  /**
    * @description 【用户详情-订阅详情-延期记录列表】响应数据
    */
   type ExpiredTimeData = {

@@ -13,8 +13,28 @@ export default [
     showMenu: true,
   },
   {
+    name: '订阅中心',
+    path: '/order',
+    key: 'order',
+    showMenu: true,
+    routes: [
+      {
+        name: '书袋管理',
+        path: '/order/bag/list',
+        key: 'bag_list',
+        component: './BagOrderManagement',
+      },
+      {
+        name: '订阅管理',
+        path: '/order/subscribe/list',
+        key: 'subscribe_list',
+        component: './SubscribeManagement',
+      },
+    ],
+  },
+  {
     name: '权限管理',
-    path: '/',
+    path: '/auth',
     key: 'auth',
     showMenu: true,
     routes: [

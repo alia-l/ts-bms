@@ -649,7 +649,7 @@ const BagTabPane: React.FC<InfoProps> = (props) => {
         editable={{
           onSave: async (_, newInfo) => {
             const params = {
-              bagOrderId: props.id,
+              bagOrderId,
               overdueDate: newInfo.overdueTimeMill,
             };
             await fetchUpdateOverdueTime(params);

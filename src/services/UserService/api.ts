@@ -230,5 +230,68 @@ export function getExtendRecordList(userServiceCardId: number) {
   return fetch(`/user/bms/user_service/extend_record/${userServiceCardId}`);
 }
 
+/**
+ * @desc 允许用户临时确认书袋
+ * @param {string} [userId='']
+ * @returns
+ */
+export function allowConfirm(userId: number) {
+  return fetch(`/user/user/allow_confirm/${userId}`, {
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 根据userId 获取account列表
+ * @param {string} [userId='']
+ * @returns
+ */
+export function getAccountListByUserId(userId: number) {
+  return fetch('/user/user/account_list', {
+    params: { userId },
+  });
+}
+
+/**
+ * @description 换绑微信
+ * @param userId
+ * @param accountId
+ * @returns {*}
+ */
+export function unBindingPhone(userId: number, accountId: number) {
+  return fetch('/user/user/unbinding_wechat', {
+    params: { userId, accountId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 换绑手机号
+ * @returns
+ * @param userId
+ * @param phone
+ */
+export function changePhoneByUserId(userId: number, phone: string) {
+  return fetch('/user/user/change_phone', {
+    params: { userId, phone },
+  });
+}
+
+/**
+ * @desc 强制换绑手机号
+ * @param userId
+ * @param phone
+ */
+export function cancelPhone(userId: number, phone: string) {
+  return fetch('/user/user/force_change_phone', {
+    params: { userId, phone },
+  });
+}
+
+
 
 

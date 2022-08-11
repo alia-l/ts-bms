@@ -1,5 +1,5 @@
 import { ProCard } from '@ant-design/pro-components';
-import { Tag, Tabs, Button, Dropdown, Menu, Switch } from 'antd';
+import { Tag, Tabs, Button, Dropdown, Menu, Switch, Modal, Radio, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useModel } from '@@/plugin-model/useModel';
 import Info from '@/components/Info';
@@ -13,6 +13,7 @@ import BagTabPane from '@/pages/UserManagement/components/BagTabPane';
 import moment from 'moment';
 import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { checkBtnAuth } from '@/utils/utils';
+import { changePhoneByUserId } from '@/services/UserService/api';
 
 const TAB_LIST = [
   { value: '1', label: '书袋订单' },
@@ -23,6 +24,7 @@ const TAB_LIST = [
   { value: '6', label: '抽奖记录' },
 ];
 const { TabPane } = Tabs;
+const { confirm } = Modal;
 
 /**
  * @description 获取level子项
@@ -69,11 +71,21 @@ const UserDetail: React.FC = (props) => {
   const {
     detailInfoLoading,
     fetchGetUserDetail,
+    fetchAllowConfirm,
+    fetchGetAccountListByUserId,
+    fetchUnBindingPhone,
+    fetchCancelPhone,
+    submitLoading,
+    accountList,
     detail,
   } = useModel('userModel');
   const [id, setId] = useState<number>();
   const [phone, setPhone] = useState<string>();
   const [open, setOpen] = useState<boolean>(false);
+  const [accountVisible, setAccountVisible] = useState<boolean>(false);
+  const [changePhoneVisible, setChangePhoneVisible] = useState<boolean>(false);
+  const [unBindAccountId, setUnBindAccountId] = useState<number>();
+  const [newPhone, setNewPhone] = useState<string>('');
 
   useEffect(() => {
     // @ts-ignore
@@ -84,14 +96,15 @@ const UserDetail: React.FC = (props) => {
   }, []);
 
 
-  const handleMenuClick = (e: any) => {
+  const handleMenuClick = async (e: any) => {
     const { key } = e;
     switch (key) {
       case '2':
-        // showAccountModal(id);
+        await fetchGetAccountListByUserId(id as number);
+        setAccountVisible(true);
         break;
       case '3':
-        // showChangePhoneModal(id);
+        setChangePhoneVisible(true);
         break;
       default:
         break;
@@ -99,7 +112,74 @@ const UserDetail: React.FC = (props) => {
   };
 
   const changeAllow = (value: boolean) => {
+    if (!value) return;
+    confirm({
+      title: '书袋特殊操作',
+      content: ' - 用户可以提前确认书袋\n' +
+        '    - 超过报损时间后，仍可以报损一次\n' +
+        '确定后有效时长为xx',
+      async onOk() {
+        await fetchAllowConfirm(id as number);
+        await fetchGetUserDetail(id as number);
+        setOpen(false);
+      },
+    });
+  };
 
+  const changeUnBindAccountId = (e: any) => {
+    const { value } = e.target;
+    setUnBindAccountId(value);
+  };
+
+  const handleInput = (e: any) => {
+    const { value } = e.target;
+    setNewPhone(value);
+  };
+
+  const confirmUnBindPhone = () => {
+    confirm({
+      title: '是否解绑该账号？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: async () => {
+        await fetchUnBindingPhone(id as number, unBindAccountId as number);
+        setAccountVisible(false);
+        setOpen(false)
+      },
+    });
+  };
+
+  const confirmChangePhone = () => {
+    confirm({
+      title: '是否换绑手机号？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: async () => {
+        const res: API.Result = await changePhoneByUserId(id as number, newPhone as string);
+        if (res) {
+          const { data } = res;
+          if (data) {
+            setChangePhoneVisible(false);
+            await fetchGetUserDetail(id as number);
+            message.success('操作成功');
+          } else {
+            message.error('操作失败');
+          }
+        } else {
+          setChangePhoneVisible(false);
+          confirm({
+            title: '手机号已存在注册用户，是否要注销后绑定？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk: async () => {
+              await fetchCancelPhone(id as number, newPhone as string);
+              await fetchGetUserDetail(id as number);
+            },
+          });
+        }
+        setOpen(false)
+      },
+    });
   };
 
   const moreOperation = () => {
@@ -177,6 +257,42 @@ const UserDetail: React.FC = (props) => {
         }
       </Tabs>
     </ProCard>
+    <Modal
+      title='账号列表'
+      visible={accountVisible}
+      confirmLoading={submitLoading}
+      onOk={() => confirmUnBindPhone()}
+      okText='解绑'
+      okType='danger'
+      cancelText='取消'
+      onCancel={() => setAccountVisible(false)}
+      destroyOnClose={true}
+    >
+      <Radio.Group
+        options={accountList}
+        onChange={changeUnBindAccountId}
+        value={unBindAccountId}
+      />
+    </Modal>
+    <Modal
+      title='换绑手机号'
+      visible={changePhoneVisible}
+      confirmLoading={submitLoading}
+      onOk={confirmChangePhone}
+      okText='换绑'
+      okType='danger'
+      cancelText='取消'
+      onCancel={() => setChangePhoneVisible(false)}
+      destroyOnClose={true}
+    >
+      <Input
+        placeholder='请输入换绑的新手机号'
+        value={newPhone}
+        onChange={handleInput}
+        style={{ width: 300 }}
+        size='large'
+      />
+    </Modal>
   </div>;
 };
 
