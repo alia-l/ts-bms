@@ -200,3 +200,18 @@ export function updateUserCouponExtendExpired(userCouponId: number, expireTime: 
     },
   });
 }
+
+/**
+ * @description 工单记录列表
+ * @param params
+ * @returns {*}
+ */
+export function getTicketList(params: OrderAPI.TicketListParams) {
+  return fetch(`/order/bms/ticket/get_ticket_by_type`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}

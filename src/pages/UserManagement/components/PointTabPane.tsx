@@ -32,7 +32,7 @@ const PointTabPane: React.FC<InfoProps> = (props) => {
       title: '兑换时间',
       dataIndex: 'createTime',
       key: 'createTimeRange',
-      valueType: 'dateTimeRange',
+      valueType: 'dateRange',
       search: {
         transform: (value: any) => ({ startTime: value[0], endTime: value[1] }),
       },

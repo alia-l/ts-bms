@@ -111,7 +111,7 @@ const BagOrderManagement: React.FC = () => {
       title: '确认时间',
       dataIndex: 'confirmTime',
       key: 'confirmTimeRange',
-      valueType: 'dateTimeRange',
+      valueType: 'dateRange',
       search: {
         transform: (value: any) => ({ confirmTimeStart: value[0], confirmTimeEnd: value[1] }),
       },
@@ -129,7 +129,7 @@ const BagOrderManagement: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTimeRange',
-      valueType: 'dateTimeRange',
+      valueType: 'dateRange',
       search: {
         transform: (value: any) => ({ createTimeStart: value[0], createTimeEnd: value[1] }),
       },

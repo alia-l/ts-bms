@@ -88,7 +88,7 @@ const SubscribeManagement: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTimeRange',
-      valueType: 'dateTimeRange',
+      valueType: 'dateRange',
       search: {
         transform: (value: any) => ({ createTimeStart: value[0], createTimeEnd: value[1] }),
       },

@@ -67,12 +67,55 @@ declare namespace OrderAPI {
     userServiceCardId?: number
   }
 
+  /**
+   * @description 【工单管理】请求参数
+   */
+  type TicketListParams = {
+    dueDaysModel?: boolean,
+    endTime?: string,
+    pageNum?: number,
+    serviceCardStatus: number,
+    size: number,
+    startTime?: string,
+    telephone?: string,
+    ticketType: number,
+    ticketUpdateModel: boolean,
+    workStatus?: number
+  }
+
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【工单管理】响应数据
+   */
+  type TicketListData = {
+    amount: number,
+    appointmentSequence: number,
+    bagOrderCode: string,
+    bagOrderId: number,
+    confirmedSequence: number,
+    dueDays: number,
+    exceptionBeginTime: string,
+    expireTime: string,
+    id: number,
+    logisticsCancelTime: string,
+    mainNo: string,
+    orderCode: string,
+    logisticsCancelTimepickupTime: string,
+    returnId: number,
+    sequence: number,
+    ticketRecordContent: string,
+    ticketRecordUpdateTime: string,
+    trackingName: string,
+    trackingNo: string,
+    userName: string,
+    userTelephone: string
+  }
 
   /**
    * @description 【关联订单】响应数据

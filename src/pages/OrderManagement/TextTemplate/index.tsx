@@ -12,7 +12,7 @@ const formItemLayout = {
 const TextTemplateManagement: React.FC = () => {
   const [form] = Form.useForm();
   const actionRef = useRef<ActionType>();
-  const { fetchGetSendInfoList, fetSendSmsInfo, submitLoading } = useModel('textTemplate');
+  const { fetchGetSendInfoList, fetSendSmsInfo, submitLoading } = useModel('textTemplateModel');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const columns: ProColumns<UserAPI.TextTemplateData>[] = [
     {
@@ -54,7 +54,7 @@ const TextTemplateManagement: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTimeRange',
-      valueType: 'dateTimeRange',
+      valueType: 'dateRange',
       search: {
         transform: (value: any) => ({ createTimeStart: value[0], createTimeEnd: value[1] }),
       },

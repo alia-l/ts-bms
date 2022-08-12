@@ -7,7 +7,7 @@ export default [
   //菜单路由
   {
     name: '用户管理',
-    path: '/user/list',
+    path: '/user',
     key: 'user_list',
     component: './UserManagement/List',
     showMenu: true,
@@ -22,21 +22,34 @@ export default [
         name: '书袋管理',
         path: '/order/bag/list',
         key: 'bag_list',
-        component: './BagOrderManagement',
+        component: './OrderManagement/BagOrder',
       },
       {
         name: '订阅管理',
         path: '/order/subscribe/list',
         key: 'subscribe_list',
-        component: './SubscribeManagement',
+        component: './OrderManagement/Subscribe',
       },
       {
         name: '短信模版',
         path: '/order/template/list',
         key: 'text_template',
-        component: './TextTemplateManagement',
+        component: './OrderManagement/TextTemplate',
       },
     ],
+  },
+  {
+    name:'工单中心',
+    path: '/work',
+    key: 'work_order',
+    routes:[
+      {
+        name:'异常工单',
+        path:'/work/unusual/list',
+        key: 'unusual_order_list',
+        component: './WorkOrderManagement/UnusualOrder',
+      }
+    ]
   },
   {
     name: '权限管理',
