@@ -39,17 +39,23 @@ export default [
     ],
   },
   {
-    name:'工单中心',
+    name: '工单中心',
     path: '/work',
     key: 'work_order',
-    routes:[
+    routes: [
       {
-        name:'异常工单',
-        path:'/work/unusual/list',
+        name: '异常工单',
+        path: '/work/unusual/list',
         key: 'unusual_order_list',
         component: './WorkOrderManagement/UnusualOrder',
-      }
-    ]
+      },
+      {
+        name: '超时工单',
+        path: '/work/overTime/list',
+        key: 'overtime_order_list',
+        component: './WorkOrderManagement/OverTimeOrder',
+      },
+    ],
   },
   {
     name: '权限管理',
@@ -77,6 +83,6 @@ export default [
       },
     ],
   },
-
+  { path: '/', redirect: '/user' },
   { component: './404', layout: false },
 ];

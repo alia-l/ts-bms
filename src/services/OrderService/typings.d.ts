@@ -83,12 +83,91 @@ declare namespace OrderAPI {
     workStatus?: number
   }
 
+  /**
+   * @description 【工单详情-添加跟进记录】请求参数
+   */
+  type AddTicketRecordParams = {
+    content: string,
+    ticketId?: number
+    overCode: boolean,
+    operationType: number
+  }
+
+  /**
+   * @description 【工单详情-丢件记录】请求参数
+   */
+  type AddLostTicketRecordParams = {
+    orderCode?: string,
+    telephone?: string,
+    ticketType?: string,
+    workStatus?: number
+  }
+
+  /**
+   * @description 【工单详情-添加丢件记录】请求参数
+   */
+  type SubmitLostTicketParams = {
+    amount: number,
+    bagOrderId: number,
+    orderCode: string
+    remark: string
+    returnOrderId: number
+    sequence: number
+    ticketId: number
+    ticketType: number
+    trackingName: string
+    trackingNo: string
+  }
+
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【工单详情-丢件记录】响应数据
+   */
+  type AddLostTicketRecordData = {
+    amount: number
+    bagOrderId: number
+    createTime: string
+    handleTime: any
+    id: number
+    mainNo: any
+    orderCode: string
+    returnOrderId: any
+    sequence: number
+    trackingName: string
+    trackingNo: string
+    userName: string
+    userTelephone: string
+  }
+
+  /**
+   * @description 【工单详情】响应数据
+   */
+  type TicketDetailData = {
+    ticketRecordList: TicketDetail_ticketRecordList
+    tip: any
+    tipDays: any
+    tipSequence: any
+    tipTicketType: any
+  }
+
+  /**
+   * @description 【工单详情-ticketRecordList】响应数据
+   */
+  type TicketDetail_ticketRecordList = {
+    content: string
+    createTime: string
+    id: number
+    staffId: any
+    ticketId: number
+    type: number
+    updateTime: string
+  }
 
   /**
    * @description 【工单管理】响应数据

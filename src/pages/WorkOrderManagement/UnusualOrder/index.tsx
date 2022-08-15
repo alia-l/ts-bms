@@ -1,13 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, DatePicker, Tabs } from 'antd';
+import { Button, DatePicker, Drawer, Form, Input, Modal, Select, Tabs } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import moment from 'moment';
 import { TIME_FORMAT } from '@/conf/conf';
-import './index.less'
+import './index.less';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
+const { TextArea } = Input;
+const { Option } = Select;
 
 const WORK_STATUS = {
   0: { text: '未处理' },
@@ -22,12 +24,40 @@ const SERVICE_CARD_STATUS = {
   '-10': { text: '冻结或失效' },
 };
 
+const FOllOW_STATUS = [
+  { value: 1, label: '跟进记录' },
+  { value: 2, label: '重新预约' },
+  { value: 3, label: '填写运单号' },
+];
+
+
+const formItemLayout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
+};
+
 const UnusualOrderManagement: React.FC = () => {
+  const [form] = Form.useForm();
   const actionRef = useRef<ActionType>();
-  const { fetchGetTicketList } = useModel('unusualOrderModel');
+  const {
+    fetchGetTicketList,
+    fetchGetTicketRecordList,
+    fetchAddTicketRecord,
+    fetchGetLostTicketList,
+    fetchChangeLostOrderRecord,
+    ticketRecordList,
+    lostTicketRecord,
+    submitLoading,
+  } = useModel('unusualOrderModel');
   const [currentTab, serCurrentTab] = useState<string>('4');
   const [dueDaysMode, setDueDaysMode] = useState<boolean | null>(null);
   const [ticketUpdateMode, setTicketUpdateMode] = useState<boolean | null>(null);
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [content, setContent] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [ticketId, setTicketId] = useState<number>();
+  const [operationType, setOperationType] = useState<number>(1);
   const forwardColumns: ProColumns<OrderAPI.TicketListData>[] = [
     {
       title: '工单状态',
@@ -100,14 +130,15 @@ const UnusualOrderManagement: React.FC = () => {
       title: '用户信息',
       dataIndex: 'userName',
       key: 'userName',
+      render: (text, record) => {
+        return <span
+          style={{ color: '#1890ff', cursor: 'pointer' }}
+          onClick={() => {
+          }}
+        >
+          {`${text || '-'}/${record.userTelephone || '-'}`}</span>;
+      },
       hideInSearch: true,
-    },
-    {
-      title: '手机号',
-      dataIndex: 'userTelephone',
-      key: 'userTelephone',
-      hideInSearch: true,
-      copyable: true,
     },
     {
       title: '超时天数',
@@ -166,8 +197,14 @@ const UnusualOrderManagement: React.FC = () => {
       valueType: 'option',
       width: 100,
       fixed: 'right',
-      render: () => {
-        return <Button type={`link`}>详情</Button>;
+      render: (_, record) => {
+        const { id, userTelephone } = record;
+        return <Button type={`link`} onClick={async () => {
+          setDrawerVisible(true);
+          setTicketId(id);
+          setPhone(userTelephone);
+          await fetchGetTicketRecordList(id);
+        }}>详情</Button>;
       },
     },
   ];
@@ -243,14 +280,15 @@ const UnusualOrderManagement: React.FC = () => {
       title: '用户信息',
       dataIndex: 'userName',
       key: 'userName',
+      render: (text, record) => {
+        return <span
+          style={{ color: '#1890ff', cursor: 'pointer' }}
+          onClick={() => {
+          }}
+        >
+          {`${text || '-'}/${record.userTelephone || '-'}`}</span>;
+      },
       hideInSearch: true,
-    },
-    {
-      title: '手机号',
-      dataIndex: 'userTelephone',
-      key: 'userTelephone',
-      hideInSearch: true,
-      copyable: true,
     },
     {
       title: '超时天数',
@@ -325,8 +363,14 @@ const UnusualOrderManagement: React.FC = () => {
       valueType: 'option',
       width: 100,
       fixed: 'right',
-      render: () => {
-        return <Button type={`link`}>详情</Button>;
+      render: (_, record) => {
+        const { id, userTelephone } = record;
+        return <Button type={`link`} onClick={async () => {
+          setDrawerVisible(true);
+          setTicketId(id);
+          setPhone(userTelephone);
+          await fetchGetTicketRecordList(id);
+        }}>详情</Button>;
       },
     },
   ];
@@ -398,18 +442,20 @@ const UnusualOrderManagement: React.FC = () => {
       fixed: 'left',
       width: 100,
     },
+
     {
       title: '用户信息',
       dataIndex: 'userName',
       key: 'userName',
       hideInSearch: true,
-    },
-    {
-      title: '手机号',
-      dataIndex: 'userTelephone',
-      key: 'userTelephone',
-      hideInSearch: true,
-      copyable: true,
+      render: (text, record) => {
+        return <span
+          style={{ color: '#1890ff', cursor: 'pointer' }}
+          onClick={() => {
+          }}
+        >
+          {`${text || '-'}/${record.userTelephone || '-'}`}</span>;
+      },
     },
     {
       title: '已发货天数',
@@ -485,8 +531,14 @@ const UnusualOrderManagement: React.FC = () => {
       valueType: 'option',
       width: 100,
       fixed: 'right',
-      render: () => {
-        return <Button type={`link`}>详情</Button>;
+      render: (_, record) => {
+        const { id, userTelephone } = record;
+        return <Button type={`link`} onClick={async () => {
+          setDrawerVisible(true);
+          setTicketId(id);
+          setPhone(userTelephone);
+          await fetchGetTicketRecordList(id);
+        }}>详情</Button>;
       },
     },
   ];
@@ -513,13 +565,14 @@ const UnusualOrderManagement: React.FC = () => {
       dataIndex: 'userName',
       key: 'userName',
       hideInSearch: true,
-    },
-    {
-      title: '手机号',
-      dataIndex: 'userTelephone',
-      key: 'userTelephone',
-      hideInSearch: true,
-      copyable: true,
+      render: (text, record) => {
+        return <span
+          style={{ color: '#1890ff', cursor: 'pointer' }}
+          onClick={() => {
+          }}
+        >
+          {`${text || '-'}/${record.userTelephone || '-'}`}</span>;
+      },
     },
     {
       title: '已发货天数',
@@ -587,13 +640,35 @@ const UnusualOrderManagement: React.FC = () => {
       valueType: 'option',
       width: 100,
       fixed: 'right',
-      render: () => {
-        return <Button type={`link`}>详情</Button>;
+      render: (_, record) => {
+        const { id, userTelephone } = record;
+        return <Button type={`link`} onClick={async () => {
+          setDrawerVisible(true);
+          setTicketId(id);
+          setPhone(userTelephone);
+          await fetchGetTicketRecordList(id);
+        }}>详情</Button>;
       },
     },
   ];
+
+  useEffect(() => {
+    form.setFieldsValue({
+      amount: lostTicketRecord?.amount,
+    });
+  }, [lostTicketRecord]);
+
   const changeTab = (v: string) => {
     serCurrentTab(v);
+  };
+
+  const changeTextArea = (e: any) => {
+    const { value } = e.target;
+    setContent(value);
+  };
+
+  const changeFollowStatus = (v: number) => {
+    setOperationType(v);
   };
 
   const handleTableChange = (pagination: any, filters: any, sorter: any) => {
@@ -614,6 +689,55 @@ const UnusualOrderManagement: React.FC = () => {
         }
       }
     }
+  };
+
+  const showModal = async () => {
+    const params: OrderAPI.AddLostTicketRecordParams = {
+      ticketType: currentTab,
+      telephone: phone,
+    };
+    await fetchGetLostTicketList(params);
+    setDrawerVisible(false);
+    setModalVisible(true);
+  };
+
+  const submitInfo = async () => {
+    const params: OrderAPI.AddTicketRecordParams = {
+      content,
+      ticketId,
+      operationType,
+      overCode: false,
+    };
+    await fetchAddTicketRecord(params);
+    setDrawerVisible(false);
+    setContent('');
+    actionRef.current?.reload();
+  };
+
+  const submitLostInfo = async () => {
+    const values = await form.validateFields();
+    const {
+      bagOrderId,
+      orderCode,
+      sequence,
+      trackingName,
+      trackingNo,
+      returnOrderId,
+    } = lostTicketRecord as OrderAPI.AddLostTicketRecordData;
+    const params: OrderAPI.SubmitLostTicketParams = {
+      ...values,
+      bagOrderId,
+      orderCode,
+      sequence,
+      trackingName,
+      trackingNo,
+      ticketId,
+      returnOrderId,
+      ticketType: currentTab,
+    };
+    await fetchChangeLostOrderRecord(params);
+    setModalVisible(false);
+    actionRef.current?.reload();
   };
 
   return <div className={'unusual-order-wrapper'}>
@@ -766,6 +890,76 @@ const UnusualOrderManagement: React.FC = () => {
         </TabPane>
       </Tabs>
     </PageContainer>
+    <Drawer
+      title={'工单详情'}
+      visible={drawerVisible}
+      onClose={() => setDrawerVisible(false)}
+      destroyOnClose={true}
+      width={500}
+    >
+
+      <div className='ant-descriptions-title' style={{ marginBottom: 10 }}>跟进操作</div>
+      {
+        currentTab === '3' && <Select onChange={changeFollowStatus} defaultValue={1}>
+          {
+            FOllOW_STATUS.map((it) => (
+              <Option value={it.value} key={it.value}>{it.label}</Option>
+            ))
+          }
+        </Select>
+      }
+      <TextArea rows={5} onChange={changeTextArea} value={content} />
+      <div style={{ marginBottom: 10, marginTop: 10 }}>
+        <Button
+          type={'primary'}
+          loading={submitLoading}
+          onClick={() => submitInfo()}
+        >保存
+        </Button>
+        {
+          currentTab !== '3' && <Button onClick={() => showModal()}>记录丢件</Button>
+        }
+      </div>
+      <div className='ant-descriptions-title' style={{ marginBottom: 10 }}>工单记录</div>
+      {
+        ticketRecordList?.map((it: OrderAPI.TicketDetail_ticketRecordList, index: number) => (
+          <div style={{ marginBottom: 15 }} key={index}>
+            <div>{moment(it.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
+            <div>{it.content}</div>
+          </div>
+        ))
+      }
+    </Drawer>
+    <Modal
+      title={'添加丢件记录'}
+      visible={modalVisible}
+      onCancel={() => setModalVisible(false)}
+      onOk={() => submitLostInfo()}
+      destroyOnClose={true}
+      forceRender={true}
+      confirmLoading={submitLoading}
+    >
+      <Form
+        {...formItemLayout}
+        form={form}
+      >
+        <Form.Item
+          label={`用户信息`}>{`${lostTicketRecord?.userName || ''}/${lostTicketRecord?.userTelephone || ''}`}</Form.Item>
+        <Form.Item label={`订单编号`}>{lostTicketRecord?.orderCode}</Form.Item>
+        <Form.Item label={`书袋序号`}>{lostTicketRecord?.sequence}</Form.Item>
+        <Form.Item label={`快递公司`}>{lostTicketRecord?.trackingName}</Form.Item>
+        <Form.Item label={`物流单号`}>{lostTicketRecord?.trackingNo}</Form.Item>
+        <Form.Item
+          label={'金额'}
+          name={'amount'}
+          rules={[{ required: true, message: '请输入金额' }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item label={'备注'} name={'remark'}>
+          <Input />
+        </Form.Item>
+      </Form>
+    </Modal>
   </div>;
 };
 export default UnusualOrderManagement;

@@ -215,3 +215,63 @@ export function getTicketList(params: OrderAPI.TicketListParams) {
     },
   });
 }
+
+/**
+ * @description 工单记录详情
+ * @returns {*}
+ * @param ticketId
+ */
+export function getTicketRecordList(ticketId: number) {
+  return fetch(`/order/bms/ticket/get_ticket_record_list`, {
+    params: { ticketId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 添加工单跟进记录
+ * @param params
+ * @returns {*}
+ */
+export function addTicketRecord(params: OrderAPI.AddTicketRecordParams) {
+  return fetch(`/order/bms/ticket/add_ticket_record`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 丢件记录查询
+ * @param params
+ * @returns {*}
+ */
+export function getLostTicketList(params: OrderAPI.AddLostTicketRecordParams) {
+  return fetch(`/order/bms/ticket/get_lost_ticket`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 记录丢件
+ * @param params
+ * @returns {*}
+ */
+export function changeLostOrderRecord(params: OrderAPI.SubmitLostTicketParams) {
+  return fetch(`/order/bms/ticket/lost_order_record`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+

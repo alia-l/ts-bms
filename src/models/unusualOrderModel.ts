@@ -1,9 +1,20 @@
-import { useCallback } from 'react';
-import { getTicketList } from '@/services/OrderService/api';
+import { useCallback, useState } from 'react';
+import {
+  addTicketRecord,
+  changeLostOrderRecord,
+  getLostTicketList,
+  getTicketList,
+  getTicketRecordList,
+} from '@/services/OrderService/api';
+import { message } from 'antd';
 
 export default () => {
+  // const [ticketRecord, setTicketRecord] = useState<OrderAPI.TicketDetailData>();
+  const [ticketRecordList, setTicketRecordList] = useState<OrderAPI.TicketDetail_ticketRecordList[]>();
+  const [lostTicketRecord, setLostTicketRecord] = useState<OrderAPI.AddLostTicketRecordData>();
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   /**
-   * @description 获取用户列表
+   * @description 获取工单列表
    */
   const fetchGetTicketList = useCallback(async (p: any, ticketType: string, dueDaysMode: boolean | null, ticketUpdateMode: boolean | null) => {
     const params = {
@@ -24,7 +35,84 @@ export default () => {
     };
   }, []);
 
+  /**
+   * @description 获取工单详情
+   */
+  const fetchGetTicketRecordList = useCallback(async (ticketId: number) => {
+    try {
+      const res: API.Result = await getTicketRecordList(ticketId);
+      if (res) {
+        const { data } = res;
+        // setTicketRecord(data || {});
+        setTicketRecordList(data.ticketRecordList || []);
+      }
+    } catch (e) {
+
+    }
+  }, []);
+
+  /**
+   * @description 获取工单详情
+   */
+  const fetchGetLostTicketList = useCallback(async (params: OrderAPI.AddLostTicketRecordParams) => {
+    try {
+      const res: API.Result = await getLostTicketList(params);
+      if (res) {
+        const { data } = res;
+        setLostTicketRecord(data && data[0] || {});
+      }
+    } catch (e) {
+
+    }
+  }, []);
+
+  /**
+   * @description  添加跟进记录
+   */
+  const fetchAddTicketRecord = useCallback(async (params: OrderAPI.AddTicketRecordParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await addTicketRecord(params);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+      setSubmitLoading(false);
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description  保存跟进记录
+   */
+  const fetchChangeLostOrderRecord = useCallback(async (params: OrderAPI.SubmitLostTicketParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await changeLostOrderRecord(params);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+      setSubmitLoading(false);
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+
   return {
     fetchGetTicketList,
+    fetchGetTicketRecordList,
+    fetchGetLostTicketList,
+    fetchAddTicketRecord,
+    fetchChangeLostOrderRecord,
+    ticketRecordList,
+    lostTicketRecord,
+    submitLoading,
   };
 }
