@@ -101,6 +101,9 @@ declare namespace OrderAPI {
     telephone?: string,
     ticketType?: string,
     workStatus?: number
+    trackingName?:string
+    beginTime?:string
+    endTime?:string
   }
 
   /**

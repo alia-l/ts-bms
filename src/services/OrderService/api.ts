@@ -275,3 +275,18 @@ export function changeLostOrderRecord(params: OrderAPI.SubmitLostTicketParams) {
   });
 }
 
+/**
+ * @description 批量处理丢件订单
+ * @param params
+ * @returns {*}
+ */
+export function overTicketList(params: any) {
+  return fetch(`/order/bms/ticket/over_ticket`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+

@@ -143,5 +143,73 @@ export const checkBtnAuth = (key: any) => {
   return list.includes(key);
 };
 
+/**
+ * 浮点数计算； 规避浮点数的精度丢失；
+ * eg: 32.80*100 // 3279.9999999999995;
+ */
+export const numberCal = {
+  add: (a: number, b: number) => {
+    let c;
+    let d;
+    try {
+      c = a.toString().split('.')[1].length;
+    } catch (f) {
+      c = 0;
+    } // eslint-disable-line
+    try {
+      d = b.toString().split('.')[1].length;
+    } catch (f) {
+      d = 0;
+    } // eslint-disable-line
+    const e = 10 ** Math.max(c, d);
+    return (numberCal.mul(a, e) + numberCal.mul(b, e)) / e;
+  },
+  sub: (a: number, b: number) => {
+    let c;
+    let d;
+    try {
+      c = a.toString().split('.')[1].length;
+    } catch (f) {
+      c = 0;
+    } // eslint-disable-line
+    try {
+      d = b.toString().split('.')[1].length;
+    } catch (f) {
+      d = 0;
+    } // eslint-disable-line
+    const e = 10 ** Math.max(c, d);
+    return (numberCal.mul(a, e) - numberCal.mul(b, e)) / e;
+  },
+  mul: (a: number, b: number) => {
+    let c = 0;
+    const d = a.toString();
+    const e = b.toString();
+    try {
+      c += d.split('.')[1].length;
+    } catch (f) {
+    } // eslint-disable-line
+    try {
+      c += e.split('.')[1].length;
+    } catch (f) {
+    } // eslint-disable-line
+    return (Number(d.replace('.', '')) * Number(e.replace('.', ''))) / 10 ** c;
+  },
+  div: (a: number, b: number) => {
+    let e = 0;
+    let f = 0;
+    try {
+      e = a.toString().split('.')[1].length;
+    } catch (d) {
+    } // eslint-disable-line
+    try {
+      f = b.toString().split('.')[1].length;
+    } catch (d) {
+    } // eslint-disable-line
+    const c = Number(a.toString().replace('.', ''));
+    const d = Number(b.toString().replace('.', ''));
+    return numberCal.mul(c / d, 10 ** (f - e));
+  },
+};
+
 
 

@@ -7,12 +7,13 @@ import RightContent from '@/components/RightContent';
 import { getDeviceId, getLocalStorage, setMD5 } from './utils/utils';
 import { staff_info } from './conf/conf';
 import routes from '../config/routes';
-import { ProfileOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { ProfileOutlined, SettingOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 
 const iconMapping = [
   { icon: <UserOutlined /> },
   { icon: <ProfileOutlined /> },
-  { icon: <SettingOutlined /> }
+  { icon: <SolutionOutlined /> },
+  { icon: <SettingOutlined /> },
 ];
 
 const loginPath = '/login';
@@ -97,6 +98,7 @@ const filterMenuPermission = (per = [], list = routes) => {
 };
 
 export const request: RequestConfig = {
+  timeout: 60000,
   errorHandler: (error: any) => {
     const { response } = error;
     if (!response) {
@@ -109,15 +111,20 @@ export const request: RequestConfig = {
   },
   requestInterceptors: [authHeaderInterceptor],
   responseInterceptors: [responseInterceptors],
-  timeout: 60000,
   errorConfig: {
-    adaptor: (res: Record<string, any>) => {
-      return {
-        ...res,
-        data: res?.data,
-        success: res?.resultStatus?.code === 1000,
-        errorMessage: res?.resultStatus?.message,
-      };
+    adaptor: (res: any) => {
+      const { resultStatus } = res;
+      const { code, message: msg } = resultStatus;
+      if (code !== 1000) {
+        return message.error(msg);
+      } else {
+        return {
+          ...res,
+          data: res?.data,
+          success: res?.resultStatus?.code === 1000,
+          errorMessage: res?.resultStatus?.message,
+        };
+      }
     },
   },
 };

@@ -4,7 +4,7 @@ import { Button, DatePicker, Drawer, Form, Input, Tabs } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import moment from 'moment';
 import { TIME_FORMAT } from '@/conf/conf';
-import './index.less';
+import '../index.less';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;

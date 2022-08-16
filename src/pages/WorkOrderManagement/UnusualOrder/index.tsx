@@ -4,7 +4,7 @@ import { Button, DatePicker, Drawer, Form, Input, Modal, Select, Tabs } from 'an
 import { useModel } from '@@/plugin-model/useModel';
 import moment from 'moment';
 import { TIME_FORMAT } from '@/conf/conf';
-import './index.less';
+import '../index.less';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -722,7 +722,6 @@ const UnusualOrderManagement: React.FC = () => {
       sequence,
       trackingName,
       trackingNo,
-      returnOrderId,
     } = lostTicketRecord as OrderAPI.AddLostTicketRecordData;
     const params: OrderAPI.SubmitLostTicketParams = {
       ...values,
@@ -732,12 +731,17 @@ const UnusualOrderManagement: React.FC = () => {
       trackingName,
       trackingNo,
       ticketId,
-      returnOrderId,
-      ticketType: currentTab,
     };
+
+    if (currentTab === '4') {
+      params.ticketType = 11
+    } else {
+      params.ticketType = 12
+    }
     await fetchChangeLostOrderRecord(params);
     setModalVisible(false);
     actionRef.current?.reload();
+    form.resetFields()
   };
 
   return <div className={'unusual-order-wrapper'}>

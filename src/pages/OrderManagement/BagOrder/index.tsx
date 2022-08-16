@@ -473,6 +473,9 @@ const BagOrderManagement: React.FC = () => {
       }}
       rowKey='id'
       request={fetchGetBagList}
+      form={{
+        ignoreRules: false,
+      }}
       manualRequest
     />
     <Drawer

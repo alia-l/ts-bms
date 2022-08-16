@@ -55,6 +55,12 @@ export default [
         key: 'overtime_order_list',
         component: './WorkOrderManagement/OverTimeOrder',
       },
+      {
+        name: '丢件工单',
+        path: '/work/lost/list',
+        key: 'lost_order_list',
+        component: './WorkOrderManagement/LostOrder',
+      },
     ],
   },
   {
