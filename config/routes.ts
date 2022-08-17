@@ -3,6 +3,7 @@ export default [
 
   //子页路由
   { name: '用户详情', path: '/user/detail/:id/:phone', component: './UserManagement/Detail' },
+  { name: '购买单详情', path: '/purchase/detail/:id', component: './StorageManagement/PurchaseOrder/detail' },
 
   //菜单路由
   {
@@ -42,6 +43,7 @@ export default [
     name: '工单中心',
     path: '/work',
     key: 'work_order',
+    showMenu: true,
     routes: [
       {
         name: '异常工单',
@@ -62,6 +64,19 @@ export default [
         component: './WorkOrderManagement/LostOrder',
       },
     ],
+  },
+  {
+    name:'仓储管理',
+    path: '/storage',
+    key:'storage',
+    routes: [
+      {
+        name:'购买订单',
+        path:'/storage/purchaseOrder',
+        key:'purchase_order_list',
+        component:'./StorageManagement/PurchaseOrder'
+      }
+    ]
   },
   {
     name: '权限管理',

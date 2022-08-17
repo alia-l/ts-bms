@@ -290,3 +290,32 @@ export function overTicketList(params: any) {
   });
 }
 
+/**
+ * @description 获取购买单列表
+ * @param params
+ * @returns {*}
+ */
+export function getPurchaseList(params: OrderAPI.PurchaseOrderListParams) {
+  return fetch(`/order/bms/purchase_order/list`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取购买订单
+ * @param {string} [purchaseOrderId=""]
+ * @returns {Promise}
+ */
+export function getPurchaseDetail(purchaseOrderId: number) {
+  return fetch('/order/bms/purchase_order/detail', {
+    params: { purchaseOrderId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+

@@ -101,9 +101,9 @@ declare namespace OrderAPI {
     telephone?: string,
     ticketType?: string,
     workStatus?: number
-    trackingName?:string
-    beginTime?:string
-    endTime?:string
+    trackingName?: string
+    beginTime?: string
+    endTime?: string
   }
 
   /**
@@ -122,12 +122,90 @@ declare namespace OrderAPI {
     trackingNo: string
   }
 
+  /**
+   * @description 【购买单列表】请求参数
+   */
+  type PurchaseOrderListParams = {
+    phone?: string,
+    nickname?: string,
+    userId?: string,
+    paidEndTime?: string,
+    paidStartTime?: string,
+    keyword?: string
+    pageNum: number;
+    size: number;
+  }
+
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【购买单-详情】响应数据
+   */
+  type PurchaseOrderDetailData = {
+    amount: number
+    bagOrderCode: string
+    bagOrderId: number
+    contactName: string
+    contactPhone: string
+    couponId: any
+    couponName: any
+    createTime: number
+    discountAmount: number
+    goodsQuantity: number
+    id: number
+    nickname: string
+    orderCode: string
+    outTradeNo: any
+    paidTime: any
+    payAmount: number
+    phone: string
+    sellerRemark: any
+    sequence: number
+    status: number
+    subOrderList: PurchaseOrderDetail_subOrderList[]
+    userCouponId: any
+    userId: number
+  }
+
+  /**
+   * @description 【购买单-详情-subOrderList】
+   */
+  type PurchaseOrderDetail_subOrderList = {
+    createTime: number
+    dealPrice: any
+    id: number
+    isbn: string
+    isbn10: string
+    marketPrice: number
+    productId: number
+    productName: string
+    productNo: string
+    salePrice: number
+    status: number
+  }
+
+  /**
+   * @description 【购买单列表】响应数据
+   */
+  type PurchaseOrderListData = {
+    amount: number
+    bagOrderId: number
+    bagOrderSequence: number
+    createTime: number
+    id: number
+    nickname: string
+    orderCode: string
+    phone: string
+    productNames: string[]
+    status: number
+    userId: number
+    key: number
+  }
 
   /**
    * @description 【工单详情-丢件记录】响应数据

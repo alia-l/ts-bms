@@ -217,5 +217,17 @@ export const MONTH_LIST = [
   { label: '7个月', value: 210 },
   { label: '8个月', value: 240 },
   { label: '9个月', value: 270 },
-  { label: '10个月', value: 300 }
-]
+  { label: '10个月', value: 300 },
+];
+
+//购买单自订单状态
+export const PURCHASE_SUB_STATUS: any[] = [
+  { value: -30, label: '已退款' },
+  { value: -10, label: '运行取消订单' },
+  { value: -5, label: '用户取消订单' },
+  { value: 0, label: '待支付' },
+  { value: 10, label: '已支付' },
+  { value: 20, label: '全部付款' },
+  { value: 50, label: '订单完成' },
+];
+
