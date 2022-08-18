@@ -1,3 +1,22 @@
+const { location } = window
+const { href } = location
+const envOptions = {
+  PROD: 'https://api.kangarooread.com/',
+  CDNTEST: 'https://cdn-test.kangarooread.com/',
+  CDNPROD: 'https://cdn.kangarooread.com/',
+  NODE_STAGING: 'https://node-test.kangarooread.com/',
+  NODE_PROD: 'https://node.kangarooread.com/'
+}
+
+const prodReg = /^((http|https):\/\/(bms|bmsll)\.kangarooread\.com)/
+const isProd = prodReg.test(href)
+
+const cdnServer = isProd ? envOptions.CDNPROD : envOptions.CDNTEST
+
+export const env = {
+  CDN: cdnServer
+}
+
 export const staff_info = 'staff_info';
 export const TIME_FORMAT = { FULL: 'YYYY-MM-DD HH:mm:ss' };
 

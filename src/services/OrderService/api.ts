@@ -319,3 +319,79 @@ export function getPurchaseDetail(purchaseOrderId: number) {
   });
 }
 
+/**
+ * @description 书袋已购买子订单退款(可批量)
+ * @param params
+ * @returns {*}
+ */
+export function refundPurchaseSubOrder(params: OrderAPI.RefundPurchaseSubOrderParams) {
+  return fetch(`/order/bms/purchase_order/refund_purchase_sub_order`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description  报损列表接口v3
+ * @param params
+ * @returns {*}
+ */
+export function getDamageReportList(params: OrderAPI.ReportDamageOrderListParams) {
+  return fetch(`/order/bms/damage_report/damage_report_list`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 完成积分补偿
+ * @param params
+ * @returns {*}
+ */
+export function completePointsCompensation(bagOrderCodeList: string) {
+  return fetch(`/order/bms/damage_report/complete_points_compensation`, {
+    method: 'POST',
+    data: { bagOrderCodeList },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 导出积分申请
+ * @param params
+ * @returns {*}
+ */
+export function exportPointsApply(params: OrderAPI.ReportDamageOrderListParams) {
+  return fetch(`/order/bms/damage_report/points_apply_export`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 导出自订单
+ * @param params
+ * @returns {*}
+ */
+export function exportSubReport(params: OrderAPI.ReportDamageOrderListParams) {
+  return fetch(`/order/bms/damage_report/sub_report_export`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+

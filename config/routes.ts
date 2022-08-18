@@ -3,7 +3,8 @@ export default [
 
   //子页路由
   { name: '用户详情', path: '/user/detail/:id/:phone', component: './UserManagement/Detail' },
-  { name: '购买单详情', path: '/purchase/detail/:id', component: './StorageManagement/PurchaseOrder/detail' },
+  { name: '购买订单详情', path: '/purchase/detail/:id', component: './StorageManagement/PurchaseOrder/detail' },
+  { name: '报损订单详情', path: '/reportDamage/detail/:id', component: './StorageManagement/ReportDamageOrder/detail' },
 
   //菜单路由
   {
@@ -69,12 +70,19 @@ export default [
     name:'仓储管理',
     path: '/storage',
     key:'storage',
+    showMenu: true,
     routes: [
       {
         name:'购买订单',
         path:'/storage/purchaseOrder',
         key:'purchase_order_list',
         component:'./StorageManagement/PurchaseOrder'
+      },
+      {
+        name:'报损订单',
+        path:'/storage/reportDamageOrder',
+        key:'report_damage_list',
+        component:'./StorageManagement/ReportDamageOrder'
       }
     ]
   },

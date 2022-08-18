@@ -136,12 +136,56 @@ declare namespace OrderAPI {
     size: number;
   }
 
+  /**
+   * @description 【购买单-退款】请求参数
+   */
+  type RefundPurchaseSubOrderParams = {
+    purchaseSubOrderIds: number[]
+    staffRemark: string
+  }
+
+  /**
+   * @description 【报损订单-列表】请求参数
+   */
+  type ReportDamageOrderListParams = {
+    phone?: string,
+    status?: number,
+    orderCode?: string,
+    bagOrderCode?: string,
+    startTime?: string,
+    endTime?: string,
+    isPackageBroken?: boolean,
+    pointsCompensationStatus?: number
+    pageNum: number;
+    size: number;
+  }
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+  /**
+   * @description 【报损订单-列表】响应数据
+   */
+  type ReportDamageOrderListData = {
+    bagOrderCode: string
+    bagOrderId: number
+    count: any
+    createTime: number
+    id: number
+    nickname: string
+    packageBroken: boolean
+    phone: string
+    pointsCompensationStatus: number
+    reportCode: string
+    sequence: number
+    status: number
+    userId: number
+    key: number
+  }
 
   /**
    * @description 【购买单-详情】响应数据

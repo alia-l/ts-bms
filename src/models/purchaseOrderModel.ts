@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react';
-import { getPurchaseDetail, getPurchaseList } from '@/services/OrderService/api';
+import { getPurchaseDetail, getPurchaseList, refundPurchaseSubOrder } from '@/services/OrderService/api';
+import { message } from 'antd';
 
 export default () => {
   const [renderCount, setRenderCount] = useState<number>(0);
   const [detail, setDetail] = useState<OrderAPI.PurchaseOrderDetailData>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   /**
    * @description 获取列表
    */
@@ -43,12 +45,34 @@ export default () => {
     }
   }, []);
 
+  /**
+   * @description 获取详情
+   */
+  const fetchRefundPurchaseSubOrder = useCallback(async (params: OrderAPI.RefundPurchaseSubOrderParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await refundPurchaseSubOrder(params);
+      if (res) {
+        message.success('操作成功')
+      }else{
+        message.success('操作失败')
+      }
+    } catch (e) {
+      message.success('操作失败')
+      setSubmitLoading(false);
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
 
   return {
     fetchGetPurchaseList,
     fetchGetPurchaseDetail,
+    fetchRefundPurchaseSubOrder,
     detail,
     renderCount,
     loading,
+    submitLoading
   };
 }
