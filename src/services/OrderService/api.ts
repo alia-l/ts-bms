@@ -394,4 +394,60 @@ export function exportSubReport(params: OrderAPI.ReportDamageOrderListParams) {
   });
 }
 
+/**
+ * @description 异常工单获取徽标数
+ * @returns {*}
+ */
+export function getTicketTimeoutCount() {
+  return fetch(`/order/bms/ticket/get_ticket_timeout_count`, {
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取报损详情列表
+ * @param damageReportId
+ * @returns {Promise}
+ */
+export function getReportDetail(damageReportId: number) {
+  return fetch('/order/bms/damage_report/detail', {
+    params: { damageReportId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 报损自订单回复
+ * @param params
+ * @returns {*}
+ */
+export function subReportReply(params: { reply: string, subReportId: number }) {
+  return fetch(`/order/bms/damage_report/sub_report/reply`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 标记积分补偿
+ * @param params
+ * @returns {*}
+ */
+export function subReportPointCompensation(params: OrderAPI.PointCompensationParams) {
+  return fetch(`/order/bms/damage_report/sub_report/mark_point_compensation`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
 

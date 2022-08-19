@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, DatePicker, Drawer, Form, Input, Modal, Select, Tabs } from 'antd';
+import { Badge, Button, DatePicker, Drawer, Form, Input, Modal, Select, Tabs } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import moment from 'moment';
 import { TIME_FORMAT } from '@/conf/conf';
@@ -45,8 +45,10 @@ const UnusualOrderManagement: React.FC = () => {
     fetchAddTicketRecord,
     fetchGetLostTicketList,
     fetchChangeLostOrderRecord,
+    fetchGetTicketTimeoutCount,
     ticketRecordList,
     lostTicketRecord,
+    badgeCount,
     submitLoading,
   } = useModel('unusualOrderModel');
   const [currentTab, serCurrentTab] = useState<string>('4');
@@ -656,6 +658,7 @@ const UnusualOrderManagement: React.FC = () => {
     form.setFieldsValue({
       amount: lostTicketRecord?.amount,
     });
+    fetchGetTicketTimeoutCount();
   }, [lostTicketRecord]);
 
   const changeTab = (v: string) => {
@@ -734,14 +737,14 @@ const UnusualOrderManagement: React.FC = () => {
     };
 
     if (currentTab === '4') {
-      params.ticketType = 11
+      params.ticketType = 11;
     } else {
-      params.ticketType = 12
+      params.ticketType = 12;
     }
     await fetchChangeLostOrderRecord(params);
     setModalVisible(false);
     actionRef.current?.reload();
-    form.resetFields()
+    form.resetFields();
   };
 
   return <div className={'unusual-order-wrapper'}>
@@ -751,6 +754,10 @@ const UnusualOrderManagement: React.FC = () => {
         breadcrumb: {},
       }}
     >
+      <Badge count={badgeCount?.type4} className={`badge4`}  overflowCount={9999}/>
+      <Badge count={badgeCount?.type5} className={`badge5`} overflowCount={9999}/>
+      <Badge count={badgeCount?.type6} className={`badge6`} overflowCount={9999}/>
+      <Badge count={badgeCount?.type3} className={`badge3`} overflowCount={9999}/>
       <Tabs onChange={changeTab} type='card'>
         <TabPane tab='【正】已发货超时未签收' key='4'>
           <ProTable<OrderAPI.TicketListData>

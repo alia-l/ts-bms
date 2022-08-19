@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, DatePicker, Drawer, Form, Input, Tabs } from 'antd';
+import { Badge, Button, DatePicker, Drawer, Input, Tabs } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import moment from 'moment';
 import { TIME_FORMAT } from '@/conf/conf';
@@ -25,15 +25,15 @@ const SERVICE_CARD_STATUS = {
 
 
 const OverTimeManagement: React.FC = () => {
-  const [form] = Form.useForm();
   const actionRef = useRef<ActionType>();
   const {
     fetchGetTicketList,
     fetchGetTicketRecordList,
     fetchAddTicketRecord,
+    fetchGetTicketTimeoutCount,
     ticketRecordList,
-    lostTicketRecord,
     submitLoading,
+    badgeCount,
   } = useModel('unusualOrderModel');
   const [currentTab, serCurrentTab] = useState<string>('1');
   const [dueDaysMode, setDueDaysMode] = useState<boolean | null>(null);
@@ -195,10 +195,8 @@ const OverTimeManagement: React.FC = () => {
   ];
 
   useEffect(() => {
-    form.setFieldsValue({
-      amount: lostTicketRecord?.amount,
-    });
-  }, [lostTicketRecord]);
+   fetchGetTicketTimeoutCount()
+  }, );
 
   const changeTab = (v: string) => {
     serCurrentTab(v);
@@ -250,6 +248,8 @@ const OverTimeManagement: React.FC = () => {
         breadcrumb: {},
       }}
     >
+      <Badge count={badgeCount?.type1} className={`badge1`}  overflowCount={9999}/>
+      <Badge count={badgeCount?.type2} className={`badge2`} overflowCount={9999}/>
       <Tabs onChange={changeTab} type='card'>
         <TabPane tab='【逆】逾期超时未预约' key='1'>
           <ProTable<OrderAPI.TicketListData>

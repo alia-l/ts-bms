@@ -159,12 +159,74 @@ declare namespace OrderAPI {
     pageNum: number;
     size: number;
   }
+
+  /**
+   * @description 【报损订单-积分补偿】请求参数
+   */
+  type PointCompensationParams = {
+    points: string
+    remark?: string
+    subReportId?: number
+  }
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  /**
+   * @description 【报损订单-详情】响应数据
+   */
+  type ReportDamageDetailData = {
+    bagOrderCode: string
+    createTime: number
+    id: number
+    nickName: string
+    phone: string
+    reportCode: string
+    staffRemark: any
+    status: number
+    subReportVos: ReportDamageDetailData_subReportVos[]
+  }
+
+  /**
+   * @description 【报损订单-详情-subReportVos】
+   */
+  type ReportDamageDetailData_subReportVos = {
+    damageClassify: any
+    damageClassifyRemark: any
+    damageReportId: number
+    damageType: number
+    id: number
+    imgArr: string[]
+    isbn: string
+    isbn10: string
+    pointsAmount: any
+    pointsCompensationAmount: any
+    pointsCompensationReason: any
+    pointsCompensationStatus: number
+    pointsRemark: any
+    productCode: string
+    productName: string
+    reportType: number
+    result: any
+    staffRemark: any
+    staffReply: any
+    status: number
+    userRemark: string
+  }
+
+  /**
+   * @description 【异常工单-获取徽标数】响应数据
+   */
+  type TicketBadgeCount = {
+    type1: number
+    type2: number
+    type3: number
+    type4: number
+    type5: number
+    type6: number
+  }
 
 
   /**

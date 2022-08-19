@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Input, Modal } from 'antd';
+import { Button, Input, Modal, Tag } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import { history } from 'umi';
 
@@ -62,12 +62,12 @@ const ReportDamageOrderManagement: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: '是否报损',
+      title: '包装破损',
       dataIndex: 'packageBroken',
       key: 'packageBroken',
       width: 80,
       render: (text) => {
-        return text ? '是' : '否';
+        return text ? <Tag color={'red'}>是</Tag> : <Tag>否</Tag>;
       },
       hideInSearch: true,
     },
@@ -86,8 +86,9 @@ const ReportDamageOrderManagement: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       valueEnum: {
-        0: { text: '报损未处理' },
-        10: { text: '报损已处理' },
+        0: { text: '报损未处理', status: 'Default' },
+        10: { text: '报损已处理', status: 'Success' },
+        '-10': { text: '无效', status: 'Default' },
       },
     },
     {
@@ -95,9 +96,9 @@ const ReportDamageOrderManagement: React.FC = () => {
       dataIndex: 'pointsCompensationStatus',
       key: 'pointsCompensationStatus',
       valueEnum: {
-        0: { text: '未标记' },
-        10: { text: '已标记未发放' },
-        50: { text: '已发放' },
+        0: { text: '未标记', status: 'Default' },
+        10: { text: '已标记未发放', status: 'Processing' },
+        50: { text: '已发放', status: 'Success' },
       },
     },
     {

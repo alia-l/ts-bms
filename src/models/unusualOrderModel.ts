@@ -5,6 +5,7 @@ import {
   getLostTicketList,
   getTicketList,
   getTicketRecordList,
+  getTicketTimeoutCount,
 } from '@/services/OrderService/api';
 import { message } from 'antd';
 
@@ -13,6 +14,7 @@ export default () => {
   const [ticketRecordList, setTicketRecordList] = useState<OrderAPI.TicketDetail_ticketRecordList[]>();
   const [lostTicketRecord, setLostTicketRecord] = useState<OrderAPI.AddLostTicketRecordData>();
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+  const [badgeCount, setBadgeCount] = useState<OrderAPI.TicketBadgeCount>();
   /**
    * @description 获取工单列表
    */
@@ -104,6 +106,21 @@ export default () => {
     }
   }, []);
 
+  /**
+   * @description  获取徽标数
+   */
+  const fetchGetTicketTimeoutCount = useCallback(async () => {
+    try {
+      const res: API.Result = await getTicketTimeoutCount();
+      if (res) {
+        const { data } = res;
+        setBadgeCount(data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
 
   return {
     fetchGetTicketList,
@@ -111,8 +128,10 @@ export default () => {
     fetchGetLostTicketList,
     fetchAddTicketRecord,
     fetchChangeLostOrderRecord,
+    fetchGetTicketTimeoutCount,
     ticketRecordList,
     lostTicketRecord,
     submitLoading,
+    badgeCount
   };
 }

@@ -1,21 +1,21 @@
-const { location } = window
-const { href } = location
+const { location } = window;
+const { href } = location;
 const envOptions = {
   PROD: 'https://api.kangarooread.com/',
   CDNTEST: 'https://cdn-test.kangarooread.com/',
   CDNPROD: 'https://cdn.kangarooread.com/',
   NODE_STAGING: 'https://node-test.kangarooread.com/',
-  NODE_PROD: 'https://node.kangarooread.com/'
-}
+  NODE_PROD: 'https://node.kangarooread.com/',
+};
 
-const prodReg = /^((http|https):\/\/(bms|bmsll)\.kangarooread\.com)/
-const isProd = prodReg.test(href)
+const prodReg = /^((http|https):\/\/(bms|bmsll)\.kangarooread\.com)/;
+const isProd = prodReg.test(href);
 
-const cdnServer = isProd ? envOptions.CDNPROD : envOptions.CDNTEST
+const cdnServer = isProd ? envOptions.CDNPROD : envOptions.CDNTEST;
 
 export const env = {
-  CDN: cdnServer
-}
+  CDN: cdnServer,
+};
 
 export const staff_info = 'staff_info';
 export const TIME_FORMAT = { FULL: 'YYYY-MM-DD HH:mm:ss' };
@@ -248,5 +248,13 @@ export const PURCHASE_SUB_STATUS: any[] = [
   { value: 10, label: '已支付' },
   { value: 20, label: '全部付款' },
   { value: 50, label: '订单完成' },
+];
+
+// 报损的类型
+export const DAMAGE_TYPE: any[] = [
+  { name: '缺失', value: 1 },
+  { name: '损坏', value: 2 },
+  { name: '其他', value: 3 },
+  { name: '其他', value: 99 },
 ];
 
