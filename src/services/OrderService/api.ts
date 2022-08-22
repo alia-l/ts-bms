@@ -450,4 +450,35 @@ export function subReportPointCompensation(params: OrderAPI.PointCompensationPar
   });
 }
 
+/**
+ * @description 报损原因分类
+ * @param params
+ * @returns {*}
+ */
+export function subReportDamageClassify(params: OrderAPI.DamageTypeParams) {
+  return fetch(`/order/bms/damage_report/sub_report/mark_damage_classify`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 整单回复
+ * @param params
+ * @returns {*}
+ */
+export function damageReportV2(params: OrderAPI.StaffReportParams) {
+  return fetch(`/order/bms/damage_report/updateV2`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+
 

@@ -149,7 +149,7 @@ const ReportDamageOrderManagement: React.FC = () => {
   return <div>
     <PageContainer
       header={{
-        title: '购买订单',
+        title: '报损订单',
         breadcrumb: {},
       }}
     >

@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import {
-  completePointsCompensation,
+  completePointsCompensation, damageReportV2,
   exportPointsApply,
   exportSubReport,
   getDamageReportList,
-  getReportDetail, subReportPointCompensation, subReportReply,
+  getReportDetail, subReportDamageClassify, subReportPointCompensation, subReportReply,
 } from '@/services/OrderService/api';
 import { message } from 'antd';
 import { env } from '@/conf/conf';
@@ -13,6 +13,8 @@ export default () => {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [reportDetail, setReportDetail] = useState<OrderAPI.ReportDamageDetailData>();
+  const [staffRemark, setStaffRemark] = useState<string>('');
+
   /**
    * @description 获取列表
    */
@@ -42,10 +44,10 @@ export default () => {
       if (res) {
         message.success('操作成功');
       } else {
-        message.success('操作失败');
+        message.error('操作失败');
       }
     } catch (e) {
-      message.success('操作失败');
+      message.error('操作失败');
       setSubmitLoading(false);
     } finally {
       setSubmitLoading(false);
@@ -73,10 +75,10 @@ export default () => {
           window.open(`${env.CDN}${data}`);
         }
       } else {
-        message.success('操作失败');
+        message.error('操作失败');
       }
     } catch (e) {
-      message.success('操作失败');
+      message.error('操作失败');
       setSubmitLoading(false);
     } finally {
       setSubmitLoading(false);
@@ -104,10 +106,10 @@ export default () => {
           window.open(`${env.CDN}${data}`);
         }
       } else {
-        message.success('操作失败');
+        message.error('操作失败');
       }
     } catch (e) {
-      message.success('操作失败');
+      message.error('操作失败');
       setSubmitLoading(false);
     } finally {
       setSubmitLoading(false);
@@ -124,6 +126,7 @@ export default () => {
       if (res) {
         const { data } = res;
         setReportDetail(data);
+        setStaffRemark(data.staffRemark)
       }
     } catch (e) {
       setLoading(false);
@@ -142,10 +145,10 @@ export default () => {
       if (res) {
         message.success('操作成功');
       } else {
-        message.success('操作失败');
+        message.error('操作失败');
       }
     } catch (e) {
-      message.success('操作失败');
+      message.error('操作失败');
       setSubmitLoading(false);
     } finally {
       setSubmitLoading(false);
@@ -162,10 +165,50 @@ export default () => {
       if (res) {
         message.success('操作成功');
       } else {
-        message.success('操作失败');
+        message.error('操作失败');
       }
     } catch (e) {
-      message.success('操作失败');
+      message.error('操作失败');
+      setSubmitLoading(false);
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description 报损原因分类
+   */
+  const fetchSubReportDamageClassify = useCallback(async (params: OrderAPI.DamageTypeParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await subReportDamageClassify(params);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+      message.error('操作失败');
+      setSubmitLoading(false);
+    } finally {
+      setSubmitLoading(false);
+    }
+  }, []);
+
+  /**
+   * @description 报损原因分类
+   */
+  const fetchDamageReportV2 = useCallback(async (params: OrderAPI.StaffReportParams) => {
+    setSubmitLoading(true);
+    try {
+      const res: API.Result = await damageReportV2(params);
+      if (res) {
+        message.success('操作成功');
+      } else {
+        message.error('操作失败');
+      }
+    } catch (e) {
+      message.error('操作失败');
       setSubmitLoading(false);
     } finally {
       setSubmitLoading(false);
@@ -180,7 +223,11 @@ export default () => {
     fetchGetReportDetail,
     fetchSubReportReply,
     fetchSubReportPointCompensation,
+    fetchSubReportDamageClassify,
+    fetchDamageReportV2,
     reportDetail,
+    staffRemark,
+    setStaffRemark,
     loading,
     submitLoading,
   };

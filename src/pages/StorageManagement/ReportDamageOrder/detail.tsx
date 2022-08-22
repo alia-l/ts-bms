@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useModel } from '@@/plugin-model/useModel';
 import { DAMAGE_TYPE } from '@/conf/conf';
 import ReplyInfo from '@/components/ReplyInfo';
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, Form, Input, Modal, Radio } from 'antd';
 import 'react-photo-view/dist/react-photo-view.css';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
@@ -15,13 +15,25 @@ const replyInfo = [
   { value: 4, label: '您好，您的报损因【未上传破损图】报损失败，需要您联系在线客服给您重新开通报损' },
 ];
 
+const damageCheckType: any[] = [
+  { value: 5, label: '快递原因导致' },
+  { value: 10, label: '仓库质检遗漏' },
+];
+
+const { TextArea } = Input;
+
 const ReportDamageOrderDetail: React.FC = (props) => {
   const [form] = Form.useForm();
+  const [damageForm] = Form.useForm();
   const {
     fetchGetReportDetail,
     fetchSubReportReply,
     fetchSubReportPointCompensation,
+    fetchSubReportDamageClassify,
+    fetchDamageReportV2,
     reportDetail,
+    staffRemark,
+    setStaffRemark,
     submitLoading,
   } = useModel('reportDamageOrderModel');
   const [detailId, setDetailId] = useState<number>();
@@ -29,6 +41,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
   const [pointStatus, setPointsStatus] = useState<number>();
   const [item, setItem] = useState<OrderAPI.ReportDamageDetailData_subReportVos>();
   const [pointModalVisible, setPointModalVisible] = useState<boolean>(false);
+  const [damageModalVisible, setDamageModalVisible] = useState<boolean>(false);
   const columns: ProColumns<OrderAPI.ReportDamageDetailData_subReportVos>[] = [
     {
       title: 'ID',
@@ -93,9 +106,9 @@ const ReportDamageOrderDetail: React.FC = (props) => {
     {
       title: '操作',
       valueType: 'option',
-      width: 200,
+      width: 220,
       render: (text, record, _, action) => {
-        const { id, staffReply, pointsCompensationStatus } = record;
+        const { id, staffReply, pointsCompensationStatus, damageClassify } = record;
         return [
           <Button
             key='reply'
@@ -117,13 +130,25 @@ const ReportDamageOrderDetail: React.FC = (props) => {
             }}
           >
             {
-              pointsCompensationStatus === 10 ? '积分未发放' : pointsCompensationStatus === 50 ? '积分已发放' : '积分补偿'
+              pointsCompensationStatus === 10 ?
+                <span style={{ color: '#8c8c8c' }}>积分未发放</span> : pointsCompensationStatus === 50 ?
+                <span style={{ color: '#73d13d' }}>积分已发放</span> : '积分补偿'
             }
           </a>,
           <a
             key='damage'
+            onClick={() => {
+              setItem(record);
+              setDamageModalVisible(true);
+            }}
           >
-            报损原因分类
+            {
+              damageClassify ?
+                <span
+                  style={{ color: '#8c8c8c' }}>
+                  {(damageCheckType.find((it) => it.value === damageClassify) || {}).label}
+                </span> : '报损原因分类'
+            }
           </a>,
         ];
       },
@@ -137,7 +162,14 @@ const ReportDamageOrderDetail: React.FC = (props) => {
     fetchGetReportDetail(id);
   }, []);
 
-  const saveStaffReply = async (id: any, it: OrderAPI.ReportDamageDetailData_subReportVos) => {
+
+  const changeStaffRemark = (e: any) => {
+    const { value } = e.target;
+    setStaffRemark(value);
+  };
+
+
+  const submitStaffReply = async (id: any, it: OrderAPI.ReportDamageDetailData_subReportVos) => {
     const { staffReply } = it;
     console.log(it);
     const params = {
@@ -158,10 +190,36 @@ const ReportDamageOrderDetail: React.FC = (props) => {
     await fetchSubReportPointCompensation(params);
     await fetchGetReportDetail(detailId as number);
     setPointModalVisible(false);
+    form.resetFields();
   };
 
+  const submitDamageInfo = async () => {
+    const values = await damageForm.validateFields();
+    const params: OrderAPI.DamageTypeParams = {
+      subReportId: item?.id,
+      damageClassify: values.damageClassify,
+      remark: values.damageRemark,
+    };
+    await fetchSubReportDamageClassify(params);
+    await fetchGetReportDetail(detailId as number);
+    setDamageModalVisible(false);
+    damageForm.resetFields();
+  };
+
+  const submitStaffRemark = async () => {
+    const params: OrderAPI.StaffReportParams = {
+      id: reportDetail?.id,
+      staffRemark,
+      status: 10,
+    };
+    await fetchDamageReportV2(params);
+    await fetchGetReportDetail(detailId as number);
+
+  };
+
+
   return <div>
-    <ProCard>
+    <ProCard style={{ marginBottom: 16 }}>
       <ProDescriptions
         title={'基础信息'}
         dataSource={reportDetail}
@@ -219,8 +277,9 @@ const ReportDamageOrderDetail: React.FC = (props) => {
       columns={columns}
       value={reportDetail?.subReportVos}
       recordCreatorProps={false}
+      style={{ marginBottom: 16 }}
       editable={{
-        onSave: async (rowKey, data) => saveStaffReply(rowKey, data),
+        onSave: async (rowKey, data) => submitStaffReply(rowKey, data),
         actionRender: (row, config, defaultDom) => {
           return [
             defaultDom.save,
@@ -228,6 +287,11 @@ const ReportDamageOrderDetail: React.FC = (props) => {
         },
       }}
     />
+    <ProCard title={'仓库备注回复'}>
+      <TextArea rows={4} onChange={changeStaffRemark} value={staffRemark} />
+      <Button type={'primary'} className='mTop' onClick={() => submitStaffRemark()} loading={submitLoading}>保存</Button>
+    </ProCard>
+
     <Modal
       title={'积分补偿'}
       visible={pointModalVisible}
@@ -241,7 +305,9 @@ const ReportDamageOrderDetail: React.FC = (props) => {
       <Form
         form={form}
       >
-        <Form.Item label={'补偿积分'} name={'pointsAmount'} rules={[{ required: true, message: '请填写积分' }]}>
+        <Form.Item label={'补偿积分'} name={'pointsAmount'}
+                   rules={[{ required: true, message: '请填写积分' }]}
+        >
           {
             pointStatus === 10 || pointStatus === 50 ? item?.pointsAmount || '' : <Input placeholder={'10积分=1元'} />
           }
@@ -252,7 +318,41 @@ const ReportDamageOrderDetail: React.FC = (props) => {
           }
         </Form.Item>
       </Form>
+    </Modal>
+    <Modal
+      title={'损坏原因分类'}
+      visible={damageModalVisible}
+      onCancel={() => setDamageModalVisible(false)}
+      forceRender={true}
+      destroyOnClose={true}
+      confirmLoading={submitLoading}
+      okButtonProps={{ disabled: item?.damageClassify }}
+      onOk={() => submitDamageInfo()}
+    >
+      <Form
+        form={damageForm}
+      >
+        <Form.Item label={'损坏原因分类'} name={'damageClassify'}
+                   rules={[{ required: true, message: '请选择损坏原因' }]}
+        >
+          {
+            item?.damageClassify ? (damageCheckType.find((it) => it.value === item?.damageClassify) || {}).label :
+              <Radio.Group>
+                {
+                  damageCheckType.map((it) => (
+                    <Radio value={it.value} key={it.value}>{it.label}</Radio>
+                  ))
+                }
+              </Radio.Group>
+          }
 
+        </Form.Item>
+        <Form.Item label={'损坏原因备注'} name={'damageRemark'}>
+          {
+            item?.damageClassify ? item?.damageClassifyRemark : <Input />
+          }
+        </Form.Item>
+      </Form>
     </Modal>
   </div>;
 };

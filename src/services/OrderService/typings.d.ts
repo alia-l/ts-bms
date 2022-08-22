@@ -168,6 +168,24 @@ declare namespace OrderAPI {
     remark?: string
     subReportId?: number
   }
+
+  /**
+   * @description 【报损订单-报损分类】请求参数
+   */
+  type DamageTypeParams = {
+    damageClassify: number
+    remark?: string
+    subReportId?: number
+  }
+
+  /**
+   * @description 【报损订单-仓库备注】请求参数
+   */
+  type StaffReportParams = {
+    status?: number
+    staffRemark?: string
+    id?: number
+  }
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
