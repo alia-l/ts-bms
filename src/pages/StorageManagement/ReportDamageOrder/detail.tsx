@@ -1,4 +1,4 @@
-import { EditableProTable, ProCard, ProColumns, ProDescriptions } from '@ant-design/pro-components';
+import { EditableProTable, PageContainer, ProCard, ProColumns, ProDescriptions } from '@ant-design/pro-components';
 import React, { useEffect, useState } from 'react';
 import { useModel } from '@@/plugin-model/useModel';
 import { DAMAGE_TYPE } from '@/conf/conf';
@@ -6,6 +6,7 @@ import ReplyInfo from '@/components/ReplyInfo';
 import { Button, Form, Input, Modal, Radio } from 'antd';
 import 'react-photo-view/dist/react-photo-view.css';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
+import GoBack from '@/components/GoBack';
 
 
 const replyInfo = [
@@ -82,7 +83,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
         const { imgArr } = record;
         return <PhotoProvider maskOpacity={0.5}>
           {
-            imgArr.map((it, index) => (
+            (imgArr || []).map((it, index) => (
               <PhotoView src={it} key={index}>
                 <img src={it} alt={''} width={50} height={50} style={{ margin: 5 }} />
               </PhotoView>
@@ -218,7 +219,8 @@ const ReportDamageOrderDetail: React.FC = (props) => {
   };
 
 
-  return <div>
+  return <PageContainer content={<GoBack path={'/storage/reportDamageOrder'}/>}
+  >
     <ProCard style={{ marginBottom: 16 }}>
       <ProDescriptions
         title={'基础信息'}
@@ -354,7 +356,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
         </Form.Item>
       </Form>
     </Modal>
-  </div>;
+  </PageContainer>;
 };
 
 export default ReportDamageOrderDetail;

@@ -7,12 +7,13 @@ import RightContent from '@/components/RightContent';
 import { getDeviceId, getLocalStorage, setMD5 } from './utils/utils';
 import { staff_info } from './conf/conf';
 import routes from '../config/routes';
-import { ProfileOutlined, SettingOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
+import { BlockOutlined, ProfileOutlined, SettingOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 
 const iconMapping = [
   { icon: <UserOutlined /> },
   { icon: <ProfileOutlined /> },
   { icon: <SolutionOutlined /> },
+  { icon: <BlockOutlined /> },
   { icon: <SettingOutlined /> },
 ];
 

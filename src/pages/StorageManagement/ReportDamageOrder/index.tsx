@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react';
-import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActionType, PageContainer, ProColumns, ProFormInstance, ProTable } from '@ant-design/pro-components';
 import { Button, Input, Modal, Tag } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import { history } from 'umi';
 
 const { TextArea } = Input;
 
-const ReportDamageOrderManagement: React.FC = () => {
+const ReportDamageOrderManagement: React.FC = (props: any) => {
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<ProFormInstance>();
   const {
     fetchGetDamageReportList,
     fetchCompletePointsCompensation,
@@ -15,6 +16,7 @@ const ReportDamageOrderManagement: React.FC = () => {
     fetchExportSubReport,
     submitLoading,
   } = useModel('reportDamageOrderModel');
+  const { updateReportDamageSearchProps, reportDamageSearchProps } = useModel('index');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [bagOrderCodeList, setBagOrderCodeList] = useState<string>('');
   const [searchForm, setSearchForm] = useState({});
@@ -24,8 +26,15 @@ const ReportDamageOrderManagement: React.FC = () => {
       dataIndex: 'phone',
       key: 'phone',
       hideInTable: true,
+
     },
-    { title: 'ID', dataIndex: 'id', key: 'id', hideInSearch: true, width: 80 },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      hideInSearch: true,
+      width: 80,
+    },
     {
       title: '用户信息',
       dataIndex: 'nickname',
@@ -46,6 +55,9 @@ const ReportDamageOrderManagement: React.FC = () => {
       key: 'reportCode',
       copyable: true,
       width: 280,
+      search: {
+        transform: (value: any) => ({ orderCode: value }),
+      },
     },
     {
       title: '书袋编码',
@@ -82,7 +94,7 @@ const ReportDamageOrderManagement: React.FC = () => {
       hideInTable: true,
     },
     {
-      title: '状态',
+      title: '报损状态',
       dataIndex: 'status',
       key: 'status',
       valueEnum: {
@@ -134,6 +146,22 @@ const ReportDamageOrderManagement: React.FC = () => {
     },
   ];
 
+  const initData = () => {
+    const { query } = props.location;
+    if (query) {
+      if (query.back === 'success') {
+        formRef?.current?.setFieldsValue(reportDamageSearchProps);
+        setTimeout(() => {
+          actionRef.current?.reload();
+        }, 100);
+      }
+    }
+  };
+
+  useEffect(() => {
+    initData();
+  }, []);
+
 
   const changeTextArea = (e: any) => {
     const { value } = e.target;
@@ -154,11 +182,14 @@ const ReportDamageOrderManagement: React.FC = () => {
       }}
     >
       <ProTable<OrderAPI.ReportDamageOrderListData>
+        formRef={formRef}
+        params={reportDamageSearchProps}
         columns={columns}
         scroll={{ x: 1800 }}
         actionRef={actionRef}
         beforeSearchSubmit={(params) => {
           setSearchForm(params);
+          updateReportDamageSearchProps(params);
           return params;
         }}
         search={{
@@ -198,7 +229,7 @@ const ReportDamageOrderManagement: React.FC = () => {
         ]}
         rowKey='id'
         request={fetchGetDamageReportList}
-        manualRequest
+        manualRequest={true}
       />
     </PageContainer>
     <Modal

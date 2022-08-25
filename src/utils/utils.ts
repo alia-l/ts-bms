@@ -210,6 +210,27 @@ export const numberCal = {
     return numberCal.mul(c / d, 10 ** (f - e));
   },
 };
+// 截取url上面的字段
+// @ts-ignore
+export const getParams = (str: string) => {
+  if (!str) return {};
+  try {
+    const paramsStr = str.split('?')[1];
+    const list = paramsStr.split('&');
+    const params = {};
+    if (list.length > 0) {
+      for (let i = 0; i < list.length; i++) {
+        const key = list[i].split('=')[0];
+        const value = list[i].split('=')[1];
+        params[key] = value;
+      }
+      return params;
+    }
+    return {};
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 
 
