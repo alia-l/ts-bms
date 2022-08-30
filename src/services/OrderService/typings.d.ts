@@ -227,12 +227,89 @@ declare namespace OrderAPI {
     staffRemark?: string,
     orderCode: string
   }
+
+  /**
+   * @description 【入库订单-列表】请求参数
+   */
+  type GoodsInOrderListParams = {
+    phone?: string
+    status?: number
+    goodsInOrderCode?: string
+    bagOrderCode?: string
+    staffName?: string
+    startTime?: string
+    endTime?: string
+    pageNum: number;
+    size: number;
+  }
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【入库订单-详情】响应数据
+   */
+  type GoodsInOrderDetailData = {
+    bagOrderCode: string
+    bagOrderId: number
+    createTime: number
+    expressType: number
+    goodsList: any
+    id: number
+    inspectionTime: number
+    nickname: string
+    orderCode: string
+    phone: string
+    returnOrderCode: any
+    returnOrderId: number
+    sequence: any
+    status: number
+    userId: number
+    wmsOrderCode: any
+    subOrderList: GoodsInOrderDetail_subOrderList[]
+  }
+
+  /**
+   * @description 【入库订单-详情-subOrderList】
+   */
+  type GoodsInOrderDetail_subOrderList = {
+    checkVideoDuration: any
+    checkVideoUrl: any
+    createTime: any
+    goodIsTime: any
+    id: number
+    isbn: string
+    isbn10: string
+    productId: number
+    productName: string
+    productNo: string
+    quantity: number
+    status: number
+    wmsOrderCode: any
+  }
+
+  /**
+   * @description 【入库订单-列表】响应数据
+   */
+  type GoodsInOrderListData = {
+    bagOrderCode: string
+    bagOrderId: number
+    createTime: number
+    expressType: number
+    id: number
+    inspectionTime: number
+    nickname: string
+    orderCode: string
+    phone: string
+    sequence: number
+    staffId: number
+    staffName: string
+    status: number
+    userId: number
+  }
 
   /**
    * @description 【追损订单-详情】响应数据

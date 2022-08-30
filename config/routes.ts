@@ -91,6 +91,12 @@ export default [
         key:'damage_list',
         component:'./StorageManagement/ChaseDamageOrder'
       },
+      {
+        name:'入库订单',
+        path:'/storage/goodsInOrder',
+        key:'goods_in_list',
+        component:'./StorageManagement/GoodsInOrder'
+      },
     ]
   },
   {

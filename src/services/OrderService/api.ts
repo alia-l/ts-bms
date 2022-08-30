@@ -568,6 +568,34 @@ export function refundDamageSubOrder(params: OrderAPI.RefundDamageParams) {
   });
 }
 
+/**
+ * @desc 获取入库单列表
+ * @returns {undefined}
+ * @param params
+ */
+export function getGoodsInOrderList(params: OrderAPI.GoodsInOrderListParams) {
+  return fetch('/order/bms/goods_in_order/goods_in_list', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取入库单详情
+ * @param goodsInOrderId
+ * @returns {Promise}
+ */
+export function getGoodsInOrderDetail(goodsInOrderId: number) {
+  return fetch('/order/bms/goods_in_order/detail', {
+    params: { goodsInOrderId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
 
 
 

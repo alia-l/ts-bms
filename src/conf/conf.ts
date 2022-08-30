@@ -23,8 +23,8 @@ export const OSS_UPLOAD_HOST = {
   }.oss-cn-hangzhou.aliyuncs.com/`,
   hostShanghai: 'https://kangaroo-read-page.oss-cn-shanghai.aliyuncs.com/',
   cdn: `https://cdn${isProd ? '' : '-test'}.kangarooread.com/`,
-  page: 'https://page.kangarooread.com/'
-}
+  page: 'https://page.kangarooread.com/',
+};
 
 export const staff_info = 'staff_info';
 export const TIME_FORMAT = { FULL: 'YYYY-MM-DD HH:mm:ss' };
@@ -312,5 +312,19 @@ export const PROCESS_DAMAGE_STATUS: any[] = [
   { name: '追损未处理', value: 0 },
   { name: '追损已处理', value: 10 },
 ];
+
+// 入库单状态
+export const goodsInStatus = {
+  '-30': { text: '系统取消', status: 'Error' },
+  '-10': { text: '运营取消', status: 'Error' },
+  0: { text: '未验收', status: 'Default' },
+  5: { text: '部分验收，待追损', status: 'Processing' },
+  10: { text: '全部验收，待入库', status: 'Processing' },
+  40: { text: '部分入库', status: 'Processing' },
+  50: { text: '入库完成', status: 'Success' },
+  1: { text: '上门取件', status: 'Default' },
+  2: { text: '用户自寄', status: 'Default' },
+};
+
 
 
