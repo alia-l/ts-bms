@@ -480,5 +480,96 @@ export function damageReportV2(params: OrderAPI.StaffReportParams) {
   });
 }
 
+/**
+ * @desc 获取追损列表
+ * @param data
+ * @returns {Promise}
+ */
+export function getDamageList(params: OrderAPI.ChaseDamageParams) {
+  return fetch('/order/bms/damage_order/list', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 导出追损单
+ * @param params
+ * @returns {*}
+ */
+export function exportDamageOrder(params: OrderAPI.ChaseDamageParams) {
+  return fetch(`/order/bms/damage_order/export`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取追损详情
+ * @param damageOrderId
+ * @returns {Promise}
+ */
+export function getDamageInfo(damageOrderId: number) {
+  return fetch('/order/bms/damage_order/detail', {
+    params: { damageOrderId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 取消单独的绘本追损
+ * @param {string} [damageSubOrderId=""]
+ * @returns
+ */
+export function cancelDamageSubOrder(damageSubOrderId: number) {
+  return fetch(`/order/bms/damage_order/cancel_damage_sub_order/${damageSubOrderId}`, {
+      method: 'PUT',
+      headers: {
+        'v2': true,
+      },
+    },
+  );
+}
+
+/**
+ * @desc 更新追损单subOrder
+ * @returns {Promise}
+ * @param params
+ */
+export function updateDamageInfo(params: OrderAPI.UpdateDamageInfoParams) {
+  return fetch('/order/bms/damage_order/update', {
+    method: 'PUT',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 追损单子订单退款（可批量）
+ * @param params
+ * @returns {*}
+ */
+export function refundDamageSubOrder(params: OrderAPI.RefundDamageParams) {
+  return fetch(`/order/bms/damage_order/refund_damage_sub_order`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+
+
+
 
 

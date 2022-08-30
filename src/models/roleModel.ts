@@ -16,7 +16,7 @@ export default () => {
         if (data) {
           message.success('更新成功');
         } else {
-          message.success('更新失败');
+          message.error('更新失败');
         }
       }
     } catch (e) {
@@ -36,7 +36,7 @@ export default () => {
         if (data) {
           message.success('更新成功');
         } else {
-          message.success('更新失败');
+          message.error('更新失败');
         }
       }
     } catch (e) {
@@ -58,7 +58,7 @@ export default () => {
         if (data) {
           message.success('更新成功');
         } else {
-          message.success('更新失败');
+          message.error('更新失败');
         }
       }
     } catch (e) {

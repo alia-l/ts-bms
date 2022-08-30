@@ -45,9 +45,30 @@ const ReportDamageOrderDetail: React.FC = (props) => {
   const [damageModalVisible, setDamageModalVisible] = useState<boolean>(false);
   const columns: ProColumns<OrderAPI.ReportDamageDetailData_subReportVos>[] = [
     {
+      title: '报损图片(点击看大图)',
+      dataIndex: 'imgArr',
+      key: 'imgArr',
+      width: 200,
+      fixed: 'left',
+      render: (_, record) => {
+        const { imgArr } = record;
+        return <PhotoProvider maskOpacity={0.5}>
+          {
+            (imgArr || []).map((it, index) => (
+              <PhotoView src={it} key={index}>
+                <img src={it} alt={''} width={50} height={50} style={{ margin: 5 }} />
+              </PhotoView>
+            ))
+          }
+        </PhotoProvider>;
+      },
+      editable: false,
+    },
+    {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 80,
       editable: false,
     },
     {
@@ -76,24 +97,6 @@ const ReportDamageOrderDetail: React.FC = (props) => {
       editable: false,
     },
     {
-      title: '报损图片(点击看大图)',
-      dataIndex: 'imgArr',
-      key: 'imgArr',
-      render: (_, record) => {
-        const { imgArr } = record;
-        return <PhotoProvider maskOpacity={0.5}>
-          {
-            (imgArr || []).map((it, index) => (
-              <PhotoView src={it} key={index}>
-                <img src={it} alt={''} width={50} height={50} style={{ margin: 5 }} />
-              </PhotoView>
-            ))
-          }
-        </PhotoProvider>;
-      },
-      editable: false,
-    },
-    {
       title: '回复内容',
       dataIndex: 'staffReply',
       key: 'staffReply',
@@ -107,6 +110,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
     {
       title: '操作',
       valueType: 'option',
+      fixed: 'right',
       width: 220,
       render: (text, record, _, action) => {
         const { id, staffReply, pointsCompensationStatus, damageClassify } = record;
@@ -219,7 +223,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
   };
 
 
-  return <PageContainer content={<GoBack path={'/storage/reportDamageOrder'}/>}
+  return <PageContainer content={<GoBack path={'/storage/reportDamageOrder'} />}
   >
     <ProCard style={{ marginBottom: 16 }}>
       <ProDescriptions
@@ -277,6 +281,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
       rowKey='id'
       headerTitle={'报损内容'}
       columns={columns}
+      scroll={{ x: 1500 }}
       value={reportDetail?.subReportVos}
       recordCreatorProps={false}
       style={{ marginBottom: 16 }}
@@ -285,6 +290,7 @@ const ReportDamageOrderDetail: React.FC = (props) => {
         actionRender: (row, config, defaultDom) => {
           return [
             defaultDom.save,
+            defaultDom.cancel
           ];
         },
       }}

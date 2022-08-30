@@ -55,10 +55,10 @@ export default () => {
       if (res) {
         message.success('操作成功')
       }else{
-        message.success('操作失败')
+        message.error('操作失败')
       }
     } catch (e) {
-      message.success('操作失败')
+      message.error('操作失败')
       setSubmitLoading(false);
     } finally {
       setSubmitLoading(false);

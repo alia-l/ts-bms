@@ -30,11 +30,11 @@ export default () => {
       if (res) {
         message.success('操作成功');
       } else {
-        message.success('操作失败');
+        message.error('操作失败');
       }
     } catch (e) {
       setSubmitLoading(false)
-      message.success('操作失败');
+      message.error('操作失败');
     } finally {
       setSubmitLoading(false)
     }

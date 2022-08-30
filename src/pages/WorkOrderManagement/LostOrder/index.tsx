@@ -183,7 +183,6 @@ const LosOrderManagement: React.FC = () => {
 
   const onSelectChange = (newSelectedRowKeys: React.Key[], rows: OrderAPI.AddLostTicketRecordData[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    console.log(rows.length);
     if (rows.length === 1) {
       const time = moment(rows[0].createTime).format(TIME_FORMAT.FULL);
       const amount = rows[0].amount;

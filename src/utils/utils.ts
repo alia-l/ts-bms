@@ -230,6 +230,34 @@ export const getParams = (str: string) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+
+/**
+ * @desc 设置回显图片数据
+ * @param {*}  pic
+ * @returns
+ */
+export function setImg(pic: any) {
+  if (pic.length === 0) {
+    return [];
+  }
+  let imgArr: any[] = [];
+  if (Array.isArray(pic)) {
+    if (pic.length) {
+      imgArr = imgArr.concat(
+        pic.map((el, idx) => {
+          return {
+            uid: idx,
+            name: `file_${idx}`,
+            url: el,
+            status: 'done',
+          };
+        }),
+      );
+    }
+  }
+  return imgArr;
 }
 
 

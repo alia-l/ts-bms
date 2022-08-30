@@ -17,8 +17,44 @@ export const env = {
   CDN: cdnServer,
 };
 
+export const OSS_UPLOAD_HOST = {
+  host: `https://kangaroo-read-cdn${
+    isProd ? '' : '-test'
+  }.oss-cn-hangzhou.aliyuncs.com/`,
+  hostShanghai: 'https://kangaroo-read-page.oss-cn-shanghai.aliyuncs.com/',
+  cdn: `https://cdn${isProd ? '' : '-test'}.kangarooread.com/`,
+  page: 'https://page.kangarooread.com/'
+}
+
 export const staff_info = 'staff_info';
 export const TIME_FORMAT = { FULL: 'YYYY-MM-DD HH:mm:ss' };
+export const OSS_DIR = {
+  camp: 'resource/bms/camp/',
+  qrcode: 'resource/bms/qrcode/',
+  weekCourse: 'resource/bms/weekCourse/',
+  video: 'resource/bms/video/',
+  rich: 'resource/bms/richTextImg/',
+  IDcard: 'resource/authentication/',
+  manualAudio: 'resource/bms/manualAudio/',
+  avatar: 'resource/avatar/',
+  banner: 'resource/banner/',
+  channel: 'resource/Channel/',
+  courseActivity: 'resource/courseActivity/',
+  bookVideo: 'resource/audio/book/',
+  createWrite: 'resource/createWrite/',
+  book: 'resource/book/',
+  campSubCourse: 'resource/campSubCourse/',
+  // checkVideo: `resource/checkVideo/${videoDate}/${videoDay}/`,
+  damageFile: 'resource/damageFile/',
+  orderCheck: 'resource/orderCheck/',
+  entityAudio: 'resource/entityAudio/',
+  bookPage: 'resource/bookPage/',
+  bookVoice: 'resource/bookVoice/',
+  orgImg: 'resource/organization/',
+  authorImg: 'resource/author/',
+  bookList: 'resource/bookList/',
+  damageImg: 'resource/damage/',
+};
 
 /**
  * @description 按钮权限
@@ -257,4 +293,24 @@ export const DAMAGE_TYPE: any[] = [
   { name: '其他', value: 3 },
   { name: '其他', value: 99 },
 ];
+
+//追损类型map
+export const CHASE_DAMAGE_STATUS = {
+  '-20': { text: '客服追损复核驳回', status: 'Error' },
+  '-10': { text: '运营取消', status: 'Error' },
+  0: { text: '待支付', status: 'Default' },
+  10: { text: '已支付', status: 'Success' },
+  20: { text: '已发货', status: 'Success' },
+  25: { text: '押金待扣款', status: 'Default' },
+  45: { text: '押金已扣款', status: 'Success' },
+  50: { text: '已完成', status: 'Success' },
+};
+
+//验收类型
+export const PROCESS_DAMAGE_STATUS: any[] = [
+  { name: '无报损', value: -1 },
+  { name: '追损未处理', value: 0 },
+  { name: '追损已处理', value: 10 },
+];
+
 

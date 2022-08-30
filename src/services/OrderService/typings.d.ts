@@ -186,12 +186,143 @@ declare namespace OrderAPI {
     staffRemark?: string
     id?: number
   }
+
+  /**
+   * @description 【追损订单-列表】请求参数
+   */
+  type ChaseDamageParams = {
+    phone?: string,
+    status?: string,
+    keyword?: string,
+    startTime?: string,
+    endTime?: string,
+    paidTimeStart?: string,
+    paidTimeEnd?: string,
+    trackingNo?: string
+  }
+
+  /**
+   * @description 【追损订单-更新信息】请求参数
+   */
+  type UpdateDamageInfoParams = {
+    buyerRemark?: string,
+    confirmTime?: string,
+    id: number,
+    sellerRemark?: string,
+    status?: number,
+    subOrderList:
+      {
+        buyerRemark?: string,
+        id: number,
+        imgList: any,
+        sellerRemark?: string
+      }[]
+  }
+
+  /**
+   * @description 【追损订单-批量退款】请求参数
+   */
+  type RefundDamageParams = {
+    damageSubOrderIds: number[]
+    staffRemark?: string,
+    orderCode: string
+  }
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【追损订单-详情】响应数据
+   */
+  type ChaseDamageDetailData = {
+    amount: number
+    bagOrderCode: string
+    bagOrderId: number
+    buyerRemark: any
+    confirmTime: any
+    contactName: string
+    contactPhone: string
+    createTime: number
+    discountAmount: number
+    expressCompany: any
+    id: number
+    nickname: string
+    orderCode: string
+    outTradeNo: any
+    paidAmount: any
+    paidTime: any
+    payAmount: number
+    phone: string
+    returnOrderCode: string
+    returnOrderId: number
+    sellerRemark: any
+    sequence: number
+    staffId: number
+    staffName: string
+    status: number
+    subOrderList: ChaseDamageDetailData_subOrderList[]
+    trackingNo: any
+    userId: number
+  }
+
+  /**
+   * @description 【追损订单-详情-subOrderList】响应数据
+   */
+  type ChaseDamageDetailData_subOrderList = {
+    acceptRemark: any
+    amount: number
+    buyerRemark: any
+    confirmTime: any
+    createTime: number
+    discountAmount: number
+    goodsSequence: string
+    id: number
+    imgList: string[]
+    isbn: string
+    payAmount: number
+    productId: number
+    productName: string
+    productNo: string
+    salePrice: number
+    sellerRemark: string
+    status: number
+  }
+
+  /**
+   * @description 【追损订单-列表】响应数据
+   */
+  type ChaseDamageData = {
+    address: any
+    bagOrderCode: string
+    bagOrderId: number
+    city: any
+    contactName: string
+    contactPhone: string
+    count: number
+    county: any
+    createTime: number
+    expressCompany: any
+    id: number
+    nickname: string
+    orderCode: string
+    paidTime: any
+    payAmount: number
+    phone: string
+    province: any
+    returnOrderCode: string
+    returnOrderId: number
+    sellerRemark: any
+    sequence: number
+    staffId: number
+    staffName: string
+    status: number
+    trackingNo: any
+    userId: number
+  }
+
   /**
    * @description 【报损订单-详情】响应数据
    */
