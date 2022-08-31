@@ -314,7 +314,7 @@ export const PROCESS_DAMAGE_STATUS: any[] = [
 ];
 
 // 入库单状态
-export const goodsInStatus = {
+export const GOODS_IN_STATUS = {
   '-30': { text: '系统取消', status: 'Error' },
   '-10': { text: '运营取消', status: 'Error' },
   0: { text: '未验收', status: 'Default' },
@@ -325,6 +325,20 @@ export const goodsInStatus = {
   1: { text: '上门取件', status: 'Default' },
   2: { text: '用户自寄', status: 'Default' },
 };
+
+// 入库subOrder的状态
+export const GOODS_IN_SUB_ORDER_STATUS = {
+  '-20': { text: '追损', status: 'Error' },
+  '-5': { text: '残损', status: 'Error' },
+  0: { text: '待验收', status: 'Default' },
+  2: { text: '记录到仓', status: 'Processing' },
+  3: { text: '待复核', status: 'Processing' },
+  5: { text: '已验收', status: 'Success' },
+  8: { text: '复核入库', status: 'Success' },
+  10: { text: '已入库', status: 'Success' },
+};
+
+
 
 
 

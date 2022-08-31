@@ -42,7 +42,7 @@ const PurchaseOrderDetail: React.FC = (props) => {
     fetchGetPurchaseDetail(id);
   }, []);
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[], rows: OrderAPI.PurchaseOrderDetail_subOrderList[]) => {
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProDescriptions, ProTable } from '@ant-design/pro-components';
 import { Button, Drawer, Tag } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
-import { goodsInStatus } from '@/conf/conf';
+import { GOODS_IN_STATUS, GOODS_IN_SUB_ORDER_STATUS } from '@/conf/conf';
 
 const EXPRESS_TYPE: any[] = [
   { name: '上门取件', value: 1 },
@@ -75,7 +75,7 @@ const GoodsInOrderManagement: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      valueEnum: goodsInStatus,
+      valueEnum: GOODS_IN_STATUS,
     },
     {
       title: '操作人员',
@@ -123,6 +123,56 @@ const GoodsInOrderManagement: React.FC = () => {
           await fetchGetGoodsInOrderDetail(id);
         }}>详情</Button>;
       },
+    },
+  ];
+  const subColumns: ProColumns<OrderAPI.GoodsInOrderDetail_subOrderList>[] = [
+    {
+      title: '绘本ID',
+      dataIndex: 'productId',
+      key: 'productId',
+      width: 100,
+    },
+    {
+      title: '绘本编号',
+      dataIndex: 'productNo',
+      key: 'productNo',
+      width: 150,
+    },
+    {
+      title: '绘本名称',
+      dataIndex: 'productName',
+      key: 'productName',
+      width: 200,
+    },
+    {
+      title: '入库单号',
+      dataIndex: 'wmsOrderCode',
+      key: 'wmsOrderCode',
+      width: 200,
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      width: 100,
+      key: 'status',
+      valueEnum: GOODS_IN_SUB_ORDER_STATUS,
+    },
+    {
+      title: '入库时间',
+      dataIndex: 'goodIsTime',
+      key: 'goodIsTime',
+      valueType: 'dateTime',
+    },
+    {
+      title: '质检视频',
+      dataIndex: 'checkVideoUrl',
+      width: 150,
+      key: 'checkVideoUrl',
+    },
+    {
+      title: '质检视频时长',
+      dataIndex: 'checkVideoDuration',
+      key: 'checkVideoDuration',
     },
   ];
 
@@ -226,7 +276,7 @@ const GoodsInOrderManagement: React.FC = () => {
               title: '状态',
               dataIndex: 'status',
               key: 'status',
-              valueEnum: goodsInStatus,
+              valueEnum: GOODS_IN_STATUS,
             },
             {
               title: '入库单号',
@@ -245,6 +295,18 @@ const GoodsInOrderManagement: React.FC = () => {
           ]
         }
         column={2}
+      />
+      <div className='ant-descriptions-title' style={{ marginBottom: 20 }}>入库内容</div>
+      <ProTable<OrderAPI.GoodsInOrderDetail_subOrderList>
+        columns={subColumns}
+        dataSource={detail?.subOrderList}
+        search={false}
+        toolBarRender={false}
+        size={'small'}
+        loading={loading}
+        rowKey={'id'}
+        scroll={{ x: 1300 }}
+        pagination={false}
       />
     </Drawer>
   </div>;
