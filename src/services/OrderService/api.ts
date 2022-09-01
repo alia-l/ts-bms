@@ -596,6 +596,34 @@ export function getGoodsInOrderDetail(goodsInOrderId: number) {
   });
 }
 
+/**
+ * @desc 获取回收订单列表
+ * @returns {Promise}
+ * @param params
+ */
+export function getReturnOrderList(params: OrderAPI.ReturnOrderListParams) {
+  return fetch('/order/bms/return_order/return_list', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取回收单详情
+ * @param returnOrderId
+ * @returns {Promise}
+ */
+export function getReturnOrderDetail(returnOrderId: number) {
+  return fetch('/order/bms/return_order/detail', {
+    params: { returnOrderId },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
 
 
 

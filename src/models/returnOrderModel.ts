@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react';
-import { getGoodsInOrderDetail, getGoodsInOrderList } from '@/services/OrderService/api';
+import { getReturnOrderDetail, getReturnOrderList } from '@/services/OrderService/api';
 
 
 export default () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [detail, setDetail] = useState<OrderAPI.GoodsInOrderDetailData>();
+  const [detail, setDetail] = useState<OrderAPI.ReturnOrderDetailData>();
   /**
    * @description 获取列表
    */
-  const fetchGetGoodsInOrderList = useCallback(async (p: any) => {
+  const fetchGetReturnOrderList = useCallback(async (p: any) => {
     const params = {
       pageNum: p.current,
       size: p.pageSize,
@@ -16,7 +16,7 @@ export default () => {
     };
     delete params.pageSize;
     delete params.current;
-    const res: API.Result = await getGoodsInOrderList(params);
+    const res: API.Result = await getReturnOrderList(params);
     return {
       data: res?.data || [],
       success: res?.resultStatus?.code === 1000,
@@ -27,10 +27,10 @@ export default () => {
   /**
    * @description 详情
    */
-  const fetchGetGoodsInOrderDetail = useCallback(async (goodsInOrderId: number) => {
+  const fetchGetReturnOrderDetail = useCallback(async (returnOrderId: number) => {
     setLoading(true);
     try {
-      const res: API.Result = await getGoodsInOrderDetail(goodsInOrderId);
+      const res: API.Result = await getReturnOrderDetail(returnOrderId);
       if (res) {
         const { data } = res || {};
         setDetail(data);
@@ -44,10 +44,9 @@ export default () => {
   }, []);
 
   return {
-    fetchGetGoodsInOrderList,
-    fetchGetGoodsInOrderDetail,
+    fetchGetReturnOrderList,
+    fetchGetReturnOrderDetail,
     loading,
     detail,
   };
 }
-

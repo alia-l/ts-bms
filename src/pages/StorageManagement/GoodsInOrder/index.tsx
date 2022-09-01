@@ -153,7 +153,7 @@ const GoodsInOrderManagement: React.FC = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      width: 100,
+      width: 200,
       key: 'status',
       valueEnum: GOODS_IN_SUB_ORDER_STATUS,
     },

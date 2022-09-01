@@ -242,12 +242,112 @@ declare namespace OrderAPI {
     pageNum: number;
     size: number;
   }
+
+  /**
+   * @description 【回收订单-列表】请求参数
+   */
+  type ReturnOrderListParams = {
+    phone?: string,
+    contactName?: string,
+    contactPhone?: string,
+    trackingNo?: string,
+    bagOrderCode?: string,
+    returnOrderCode?: string,
+    pickupTimeStart?: string,
+    pickupTimeEnd?: string,
+    createTimeStart?: string,
+    createTimeEnd?: string,
+    productSequenceNo?: string
+    pageNum: number;
+    size: number;
+  }
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  /**
+   * @description 【回收订单-详情】响应数据
+   */
+  type ReturnOrderDetailData = {
+    address: string
+    arriveTerminalTime: any
+    bagOrderCode: string
+    bagOrderId: number
+    city: string
+    contactName: string
+    contactPhone: string
+    country: string
+    county: string
+    createTime: number
+    damageOrder: any
+    damageReportCode: any
+    damageStatus: number
+    expressCompany: any
+    expressNo: any
+    goodsInOrder: any
+    goodsList: ReturnOrderDetailData_goodsList
+    id: number
+    orderCode: string
+    nickname: string
+    payAmount: number
+    payStatus: number
+    payTime: any
+    phone: string
+    pickupTime: any
+    province: string
+    refundTime: any
+    sellerRemark: any
+    status: number
+    userId: number
+  }
+
+  /**
+   * @description 【回收订单-详情-goodsList】响应数据
+   */
+  type ReturnOrderDetailData_goodsList = {
+    bookNo: string
+    buyerRemark: any
+    costPrice: any
+    goodsSequenceNo: any
+    id: number
+    isbn: string
+    isbn10: string
+    marketPrice: any
+    quantity: number
+    remark: any
+    salePrice: number
+    saleTitle: string
+    status: number
+    wmsOrderCode: any
+  }
+
+  /**
+   * @description 【回收订单-列表】响应数据
+   */
+  type ReturnOrderListData = {
+    bagOrderCode: string
+    bagOrderId: number
+    contactName: string
+    contactPhone: string
+    createTime: number
+    freight: any
+    goodsInStatus: any
+    id: number
+    logisticsSync: boolean
+    nextStepFlag: boolean
+    nickname: string
+    orderCode: string
+    phone: string
+    pickupTime: any
+    reserveTime: any
+    sequence: number
+    shippingStatus: any
+    status: number
+    trackingNo: any
+    userId: number
+  }
 
   /**
    * @description 【入库订单-详情】响应数据

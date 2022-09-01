@@ -6,6 +6,7 @@ export default [
   { name: '购买订单详情', path: '/purchase/detail/:id', component: './StorageManagement/PurchaseOrder/detail' },
   { name: '报损订单详情', path: '/reportDamage/detail/:id', component: './StorageManagement/ReportDamageOrder/detail' },
   { name: '追损订单详情', path: '/chaseDamage/detail/:id', component: './StorageManagement/ChaseDamageOrder/detail' },
+  { name: '回收订单详情', path: '/returnOrder/detail/:id', component: './StorageManagement/ReturnOrder/detail' },
 
   //菜单路由
   {
@@ -96,6 +97,12 @@ export default [
         path:'/storage/goodsInOrder',
         key:'goods_in_list',
         component:'./StorageManagement/GoodsInOrder'
+      },
+      {
+        name:'回收订单',
+        path:'/storage/returnOrder',
+        key:'return_list',
+        component:'./StorageManagement/ReturnOrder'
       },
     ]
   },

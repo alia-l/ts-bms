@@ -328,15 +328,56 @@ export const GOODS_IN_STATUS = {
 
 // 入库subOrder的状态
 export const GOODS_IN_SUB_ORDER_STATUS = {
-  '-20': { text: '追损', status: 'Error' },
-  '-5': { text: '残损', status: 'Error' },
+  '-30': { text: '无效的入库子订单', status: 'Error' },
+  '-20': { text: '追损复核待确认', status: 'Error' },
+  '-10': { text: '已取消', status: 'Error' },
+  '-15': { text: '追损复核已确认', status: 'Error' },
+  '-5': { text: '残损复核待确认', status: 'Error' },
+  '-3': { text: '残损复核已确认', status: 'Error' },
   0: { text: '待验收', status: 'Default' },
   2: { text: '记录到仓', status: 'Processing' },
   3: { text: '待复核', status: 'Processing' },
+  4: { text: '追损复核驳回', status: 'Processing' },
   5: { text: '已验收', status: 'Success' },
-  8: { text: '复核入库', status: 'Success' },
+  8: { text: '复核入库待确认', status: 'Success' },
+  9: { text: '复核入库已确认', status: 'Success' },
   10: { text: '已入库', status: 'Success' },
 };
+
+export const RETURN_STATUS = {
+  '-30': { text: '物流丢件', status: 'Error' },
+  '-23': { text: '快递取消', status: 'Error' },
+  '-20': { text: '物流取消订单', status: 'Error' },
+  '-10': { text: '运营取消订单', status: 'Error' },
+  '-5': { text: '用户取消订单', status: 'Error' },
+  '-2': { text: '预约失败', status: 'Error' },
+  0: { text: '待确认', status: 'Default' },
+  10: { text: '待取件', status: 'Processing' },
+  20: { text: '已发货', status: 'Processing' },
+  30: { text: '部分签收完', status: 'Success' },
+  40: { text: '全部签收完', status: 'Success' },
+  45: { text: '部分完成', status: 'Success' },
+  50: { text: '订单完成', status: 'Success' },
+};
+
+// 逆向物流状态
+export const SHIPPING_STATUS: any[] = [
+  { name: '用户取消', value: -30 },
+  { name: '运营取消', value: -25 },
+  { name: '快递第三方取消', value: -20 },
+  { name: '无法配送', value: -10 },
+  { name: '配送失败', value: -5 },
+  { name: '待确认', value: 0 },
+  { name: '待取件', value: 5 },
+  { name: '已取件', value: 10 },
+  { name: '到达前置仓，待运转', value: 15 },
+  { name: '干线运输中', value: 20 },
+  { name: '待配送', value: 25 },
+  { name: '干线运输中', value: 20 },
+  { name: '配送中', value: 30 },
+  { name: '已签收', value: 35 },
+  { name: '订单关闭', value: 50 },
+];
 
 
 
