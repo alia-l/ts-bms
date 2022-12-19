@@ -19,17 +19,16 @@ const formItemLayout = {
   wrapperCol: { span: 20 },
 };
 
-const PointCheckDeliverOrder: React.FC = () => {
+const GiftCheckDeliverOrder: React.FC = () => {
   const [form] = Form.useForm();
 
   const actionRef = useRef<ActionType>();
   const {
-    fetchGetAuditPointsOrderList,
+    fetchGetAuditPointsGiftOrderList,
     fetchAuditPointsOrderUnusual,
     fetchEditPointsInfo,
     submitLoading,
     fetchAuditPointsOrderConfirm,
-
   } = useModel('pointCheckDeliverModel');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [remark, setRemark] = useState<string>('');
@@ -61,6 +60,7 @@ const PointCheckDeliverOrder: React.FC = () => {
       render: (text) => {
         return <img src={text as string} alt={''} width={60} />;
       },
+      width: 120,
     },
     {
       title: '商品类型',
@@ -72,6 +72,7 @@ const PointCheckDeliverOrder: React.FC = () => {
         </Tag>;
       },
       hideInSearch: true,
+      width: 120,
     },
     {
       title: '收货信息',
@@ -82,7 +83,7 @@ const PointCheckDeliverOrder: React.FC = () => {
         const content = `${name} / ${contactPhone}  ${province || ''}${city || ''}${county || ''}${address || ''}`;
         return <Popover content={content} title={null}>
           <div style={{
-            maxWidth: 200,
+            maxWidth: 250,
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -267,7 +268,7 @@ const PointCheckDeliverOrder: React.FC = () => {
   return <div className={'unusual-order-wrapper'}>
     <PageContainer
       header={{
-        title: '积分发货审单',
+        title: '大礼包发货审单',
         breadcrumb: {},
       }}
     >
@@ -341,7 +342,7 @@ const PointCheckDeliverOrder: React.FC = () => {
           ],
         }}
         rowKey='id'
-        request={fetchGetAuditPointsOrderList}
+        request={fetchGetAuditPointsGiftOrderList}
       />
     </PageContainer>
     <Drawer
@@ -480,7 +481,7 @@ const PointCheckDeliverOrder: React.FC = () => {
       {
         recordInfo && recordInfo?.status < 10 &&
         <Button onClick={() => {
-          setDrawerVisible(false)
+          setDrawerVisible(false);
           setRemarkVisible(true);
         }} type={'primary'} danger>标记异常</Button>
       }
@@ -518,4 +519,4 @@ const PointCheckDeliverOrder: React.FC = () => {
     </Modal>
   </div>;
 };
-export default PointCheckDeliverOrder;
+export default GiftCheckDeliverOrder;

@@ -80,7 +80,6 @@ const authHeaderInterceptor = (url: string, options?: Record<string, any>) => {
     options: { ...options, interceptors: true, headers: authHeader },
   };
 };
-
 const responseInterceptors = (response: Response) => {
   return response;
 };
@@ -160,5 +159,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       menuHeaderRender: undefined,
       ...initialState?.settings,
     },
+    siderWidth: 150,
+    title: '',
+    logo:'https://cdn.kangarooread.com/mp-assets/32.png',
+
+    // pure:true,
   };
 };

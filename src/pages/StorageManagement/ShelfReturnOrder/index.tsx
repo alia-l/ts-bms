@@ -1,18 +1,26 @@
 import { ActionType, PageContainer, ProColumns, ProFormInstance, ProTable } from '@ant-design/pro-components';
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Button, Modal, Space, Tag } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import { history } from '@@/core/history';
-import { CHASE_DAMAGE_STATUS } from '@/conf/conf';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from '@ant-design/icons';
+import { GOODS_IN_STATUS, RETURN_STATUS } from '@/conf/conf';
+import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 
-const ChaseDamageOrder: React.FC = (props: any) => {
+const { confirm } = Modal;
+
+const ShelfReturnOrder: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
-  const { updateChaseDamageSearchProps, chaseDamageSearchProps } = useModel('index');
-  const { fetchGetDamageList, fetchExportDamageOrder, submitLoading } = useModel('chaseDamageOrderModel');
+  const {
+    fetchGetSelfReturnOrderList,
+    fetchExportShelfReturnExl,
+    fetchCompleteSelfOrder,
+    submitLoading
+  } = useModel('shelfReturnOrderModel');
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchForm, setSearchForm] = useState({});
-  const columns: ProColumns<OrderAPI.ChaseDamageData>[] = [
+
+  const columns: ProColumns<OrderAPI.ShelfReturnOrderData>[] = [
     {
       title: '用户手机号',
       dataIndex: 'phone',
@@ -20,15 +28,15 @@ const ChaseDamageOrder: React.FC = (props: any) => {
       hideInTable: true,
     },
     {
-      title: '编码',
-      dataIndex: 'keyword',
-      key: 'keyword',
+      title: '联系人',
+      dataIndex: 'contactName',
+      key: 'contactName',
       hideInTable: true,
     },
     {
-      title: '物流单号',
-      dataIndex: 'trackingNo',
-      key: 'trackingNo',
+      title: '联系人电话',
+      dataIndex: 'contactPhone',
+      key: 'contactPhone',
       hideInTable: true,
     },
     {
@@ -40,34 +48,18 @@ const ChaseDamageOrder: React.FC = (props: any) => {
     },
     {
       title: '用户信息',
-      dataIndex: 'nickname',
-      key: 'nickname',
+      dataIndex: 'contactName',
+      key: 'contactName',
       render: (text, record) => {
         return <span
           style={{ color: '#1890ff', cursor: 'pointer' }}
           onClick={() => {
           }}
         >
-          {`${text || '-'}/${record.phone || '-'}`}</span>;
+          {`${text || '-'}/${record?.contactPhone || '-'}`}</span>;
       },
       hideInSearch: true,
     },
-    {
-      title: '订单编码',
-      dataIndex: 'orderCode',
-      key: 'orderCode',
-      copyable: true,
-      width: 280,
-      hideInSearch: true,
-    },
-    {
-      title: '书袋序号',
-      dataIndex: 'sequence',
-      key: 'sequence',
-      width: 80,
-      hideInSearch: true,
-    },
-
     {
       title: '书袋编码',
       dataIndex: 'bagOrderCode',
@@ -76,25 +68,57 @@ const ChaseDamageOrder: React.FC = (props: any) => {
       width: 280,
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      valueEnum: CHASE_DAMAGE_STATUS,
-    },
-    {
-      title: '绘本数量',
-      dataIndex: 'count',
-      key: 'count',
+      title: '书袋序号',
+      dataIndex: 'sequence',
+      key: 'sequence',
       width: 80,
       hideInSearch: true,
     },
     {
-      title: '追损金额',
-      dataIndex: 'payAmount',
-      key: 'payAmount',
-      width: 100,
+      title: '物流单号',
+      dataIndex: 'logisticsNo',
+      key: 'logisticsNo',
+      copyable: true,
+      width: 280,
+    },
+    {
+      title: '书袋序号',
+      dataIndex: 'sequence',
+      key: 'sequence',
+      width: 80,
+      hideInSearch: true,
+    },
+    {
+      title: '回收状态',
+      dataIndex: 'status',
+      key: 'status',
+      valueEnum: RETURN_STATUS,
+      hideInSearch: true,
+    },
+    {
+      title: '入库状态',
+      dataIndex: 'goodsInStatus',
+      key: 'goodsInStatus',
+      valueEnum: GOODS_IN_STATUS,
+      hideInSearch: true,
+    },
+    {
+      title: '补贴金额',
+      dataIndex: 'subsidyAmount',
+      key: 'subsidyAmount',
+      width: 80,
       valueType: 'money',
       hideInSearch: true,
+    },
+    {
+      title: '补贴状态',
+      dataIndex: 'payStatus',
+      key: 'payStatus',
+      width: 100,
+      hideInSearch: true,
+      render: (text) => {
+        return <Tag>{text === 0 || !text ? '未补贴' : '已补贴'}</Tag>;
+      },
     },
     {
       title: '创建时间',
@@ -103,30 +127,24 @@ const ChaseDamageOrder: React.FC = (props: any) => {
       valueType: 'dateRange',
       hideInTable: true,
       search: {
-        transform: (value: any) => ({ startTime: value[0], endTime: value[1] }),
+        transform: (value: any) => ({ createTimeStart: value[0], createTimeEnd: value[1] }),
       },
     },
     {
-      title: '赔付时间',
-      dataIndex: 'paidTimeDateRange',
-      key: 'paidTimeDateRange',
-      valueType: 'dateRange',
-      hideInTable: true,
-      search: {
-        transform: (value: any) => ({ paidTimeStart: value[0], paidTimeEnd: value[1] }),
+      title: '补贴状态',
+      dataIndex: 'payStatus',
+      key: 'payStatus',
+      initialValue: '0',
+      valueEnum: {
+        0: { text: '未补贴' },
+        10: { text: '已补贴' },
       },
+      hideInTable: true,
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      valueType: 'dateTime',
-      hideInSearch: true,
-    },
-    {
-      title: '赔付时间',
-      dataIndex: 'paidTime',
-      key: 'paidTime',
       valueType: 'dateTime',
       hideInSearch: true,
     },
@@ -140,51 +158,54 @@ const ChaseDamageOrder: React.FC = (props: any) => {
       render: (_, record) => {
         const { id } = record;
         return <Button type={`link`} onClick={async () => {
-          history.push(`/chaseDamage/detail/${id}`);
+          history.push(`/shelfOrderDetail/detail/${id}`);
         }}>详情</Button>;
       },
     },
   ];
 
-
-  const initData = () => {
-    const { query } = props.location;
-    if (query) {
-      if (query.back === 'success') {
-        formRef?.current?.setFieldsValue(chaseDamageSearchProps);
-        setTimeout(() => {
-          actionRef.current?.reload();
-        }, 100);
-      }
-    }
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
   };
-
-  useEffect(() => {
-    initData();
-  }, []);
 
   return <div>
     <PageContainer
       header={{
-        title: '追损订单',
+        title: '自寄订单',
         breadcrumb: {},
       }}
     >
-      <ProTable<OrderAPI.ChaseDamageData>
+      <ProTable<OrderAPI.ShelfReturnOrderData>
         formRef={formRef}
-        params={chaseDamageSearchProps}
         actionRef={actionRef}
         scroll={{ x: 1800 }}
         columns={columns}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: onSelectChange,
+        }}
         beforeSearchSubmit={(params) => {
           setSearchForm(params);
-          updateChaseDamageSearchProps(params);
           return params;
+        }}
+        tableAlertOptionRender={() => {
+          return (
+            <Space size={16} onClick={() => {
+              confirm({
+                title: '是否批量完成选中的自寄单',
+                onOk: async () => {
+                  await fetchCompleteSelfOrder({ returnOrderIdList: [...selectedRowKeys] });
+                  actionRef.current?.reload();
+                  setSelectedRowKeys([]);
+                },
+              });
+            }}>
+              <a>批量完成自寄单</a>
+            </Space>
+          );
         }}
         search={{
           labelWidth: 100,
-          collapsed: false,
-          collapseRender: () => null,
           optionRender: (searchConfig, formProps) => [
             <Button
               key='reset'
@@ -206,21 +227,17 @@ const ChaseDamageOrder: React.FC = (props: any) => {
           ],
         }}
         toolBarRender={() => [
-          <Button key='finish' type='primary' ghost icon={<VerticalAlignTopOutlined />}
-                  loading={submitLoading}
-                  onClick={async () => await fetchExportDamageOrder(searchForm)}>
-            导出追损订单
-          </Button>,
-          <Button key='pointExport' type='primary' icon={<VerticalAlignBottomOutlined />}>
-            导入物流信息
+          <Button key='pointExport' type='primary' icon={<VerticalAlignBottomOutlined />}
+                  onClick={async () => await fetchExportShelfReturnExl(searchForm)} loading={submitLoading}>
+            导出
           </Button>,
         ]}
         rowKey='id'
-        request={fetchGetDamageList}
+        request={fetchGetSelfReturnOrderList}
         manualRequest={true}
       />
 
     </PageContainer>
   </div>;
 };
-export default ChaseDamageOrder;
+export default ShelfReturnOrder;

@@ -5,6 +5,7 @@ export default () => {
   const [btnAuthList, setBtnAuthList] = useState('');
   const [reportDamageSearchProps, setReportDamageSearchProps] = useState<OrderAPI.ReportDamageOrderListParams>();
   const [chaseDamageSearchProps, setChaseDamageSearchProps] = useState<OrderAPI.ChaseDamageDetailData>();
+  const [returnOrderSearchProps, setReturnOrderSearchProps] = useState<OrderAPI.ReturnOrderListData>();
   const [ossData, setOssData] = useState<ThirdPartyAPI.OssInfoData>();
 
   /**
@@ -38,6 +39,16 @@ export default () => {
 
   /**
    *
+   * @description 回收订单搜索条件
+   *
+   */
+  const updateReturnOrderSearchProps = useCallback((params: any) => {
+    delete params._timestamp;
+    setReturnOrderSearchProps(params);
+  }, []);
+
+  /**
+   *
    * @description 获取Oss签名
    *
    */
@@ -58,9 +69,11 @@ export default () => {
     updateBtnAuthList,
     updateReportDamageSearchProps,
     updateChaseDamageSearchProps,
+    updateReturnOrderSearchProps,
     btnAuthList,
     reportDamageSearchProps,
     chaseDamageSearchProps,
+    returnOrderSearchProps,
     fetchGetOSSData,
     ossData,
   };

@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import {
-  getPointOrderDetail,
-  getPointsOrderList, refundPointOrder,
+  getPointOrderDetail, physicalCardList, refundPointOrder, updateOrderExpressCode,
 } from '@/services/OrderService/api';
 import { message } from 'antd';
+import { getCardUserList } from '@/services/UserService/api';
 
 export default () => {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
@@ -11,16 +11,34 @@ export default () => {
   const [detail, setDetail] = useState<OrderAPI.PointOrderDetail>();
 
   /**
-   * @description 获取书袋列表
+   * @description 实体卡分发
    */
-  const fetchGetPointsOrderList = useCallback(async (p: any) => {
+  const fetchGetCardUserList = useCallback(async (p: any) => {
+    const params = {
+      pageNum: p.current,
+      size: p.pageSize,
+      ...p,
+    };
+    delete params.current;
+    const res: API.Result = await getCardUserList(params);
+    return {
+      data: res?.data || [],
+      success: res?.resultStatus?.code === 1000,
+      total: res?.dataCount as number,
+    };
+  }, []);
+
+  /**
+   * @description 实体卡制作
+   */
+  const fetchPhysicalCardList = useCallback(async (p: any) => {
     const params = {
       pageNum: p.current,
       pageSize: p.pageSize,
       ...p,
     };
     delete params.current;
-    const res: API.Result = await getPointsOrderList(params);
+    const res: API.Result = await physicalCardList(params);
     return {
       data: res?.data || [],
       success: res?.resultStatus?.code === 1000,
@@ -50,10 +68,10 @@ export default () => {
   /**
    * @description
    */
-  const fetchRefundPointOrder = useCallback(async (params: any) => {
+  const fetchUpdateOrderExpressCode = useCallback(async (params: any) => {
     setSubmitLoading(true);
     try {
-      const res: API.Result = await refundPointOrder(params);
+      const res: API.Result = await updateOrderExpressCode(params);
       if (res) {
         const { data } = res || {};
         if (data) {
@@ -73,9 +91,10 @@ export default () => {
 
 
   return {
-    fetchGetPointsOrderList,
+    fetchPhysicalCardList,
+    fetchGetCardUserList,
     fetchGetPointOrderDetail,
-    fetchRefundPointOrder,
+    fetchUpdateOrderExpressCode,
     submitLoading,
     detail,
     loading,

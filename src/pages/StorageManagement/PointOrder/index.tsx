@@ -6,73 +6,36 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Cascader, Drawer, Form, Input, Modal, Tag, Radio, Select, Popover } from 'antd';
+import { Button, Drawer, Form, Input, Modal, Tag, Popover } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
-import cityOptions from '@/conf/address';
-import { EXPRESS_COMPANY, POINTS_ORDER_STATUS } from '@/conf/conf';
+import { POINTS_ORDER_STATUS } from '@/conf/conf';
 
 const { TextArea } = Input;
-const { Option } = Select;
-const { confirm } = Modal;
-const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 20 },
-};
 
 const PointOrder: React.FC = () => {
   const [form] = Form.useForm();
-
   const actionRef = useRef<ActionType>();
   const {
     fetchGetPointsOrderList,
+    fetchRefundPointOrder,
     submitLoading,
+    detail,
+    loading,
+    fetchGetPointOrderDetail,
   } = useModel('pointModel');
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [remark, setRemark] = useState<string>('');
-  const [currentExpressCompany, setCurrentExpressCompany] = useState<number>(8);
   const [detailId, setDetailId] = useState<number>();
   const [remarkVisible, setRemarkVisible] = useState<boolean>(false);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [recordInfo, setRecordInfo] = useState<OrderAPI.PointCheckDeliverData>();
-  const [currentExpressCompanyModalVisible, setCurrentExpressCompanyModalVisible] = useState<boolean>(false);
   const columns: ProColumns<OrderAPI.PointCheckDeliverData>[] = [
     { title: '下单手机号', dataIndex: 'phone', key: 'phone', hideInTable: true },
     { title: '收货手机号', dataIndex: 'contactPhone', key: 'contactPhone', hideInTable: true },
-    { title: '订单编码', dataIndex: 'orderCode', key: 'orderCode', width: 250, hideInSearch: true },
-    { title: '商品编码', dataIndex: 'productNo', key: 'productNo', hideInTable: true },
-    { title: '排除的商品编码', dataIndex: 'excludeProductNo', key: 'excludeProductNo', hideInTable: true },
-    {
-      title: '商品名称',
-      dataIndex: 'goodsName',
-      key: 'goodsName',
-      hideInSearch: true,
-    },
-    {
-      title: '商品图片',
-      dataIndex: 'goodsImgurl',
-      key: 'goodsImgurl',
-      hideInSearch: true,
-      render: (text) => {
-        return <img src={text as string} alt={''} width={60} />;
-      },
-    },
-    {
-      title: '商品类型',
-      dataIndex: 'type',
-      key: 'type',
-      render: (type) => {
-        return <Tag color={type === 1 ? 'green' : 'blue'}>
-          {type === 1 ? '积分兑换' : '抽奖'}
-        </Tag>;
-      },
-      hideInSearch: true,
-    },
+    { title: '订单编码', dataIndex: 'orderCode', key: 'orderCode', width: 300, hideInSearch: true, copyable: true },
     {
       title: '下单人',
       dataIndex: 'nickname',
       key: 'nickname',
-      width: 200,
+      width: 270,
       render: (nickname, { phone }) => {
         const content = `${nickname || '-'} / ${phone || '-'}`;
         return <Popover content={content} title={null}>
@@ -91,7 +54,7 @@ const PointOrder: React.FC = () => {
       title: '商品信息',
       dataIndex: 'pointsShopGoodsId',
       key: 'pointsShopGoodsId',
-      width: 350,
+      width: 300,
       render: (_, record) => {
         const { goodsName, goodsImgurl } = record;
         const url = goodsImgurl.indexOf('http') > -1 ? goodsImgurl : `https://cdn.kangarooread.com${goodsImgurl}`;
@@ -106,16 +69,10 @@ const PointOrder: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: '商品售价',
-      dataIndex: 'payAmount',
-      key: 'payAmount',
-      hideInSearch: true,
-
-    },
-    {
       title: '商品类型',
       dataIndex: 'type',
       key: 'type',
+      width: 80,
       render: (type) => {
         return <Tag color={type === 1 ? 'green' : 'blue'}>
           {type === 1 ? '积分兑换' : '抽奖'}
@@ -124,29 +81,42 @@ const PointOrder: React.FC = () => {
       hideInSearch: true,
     },
     {
+      title: '商品售价',
+      dataIndex: 'payAmount',
+      key: 'payAmount',
+      hideInSearch: true,
+      width: 100,
+    },
+    {
       title: '兑换数量',
       dataIndex: 'quantity',
       key: 'quantity',
       hideInSearch: true,
+      width: 100,
     },
     {
       title: '兑换积分',
       dataIndex: 'points',
       key: 'points',
       hideInSearch: true,
+      width: 100,
     },
     {
       title: '支付积分',
       dataIndex: 'payPoints',
       key: 'payPoints',
       hideInSearch: true,
+      width: 100,
     },
+
     {
       title: '支付时间',
       dataIndex: 'paidTime',
       key: 'paidTime',
       valueType: 'dateTime',
       hideInSearch: true,
+      width: 100,
+
     },
     {
       title: '物流单号',
@@ -170,7 +140,7 @@ const PointOrder: React.FC = () => {
       width: 300,
       render: (_, record) => {
         const { province, city, county, address } = record;
-        return `${province || ''}${city || ''}${county}${address}`;
+        return `${province || ''}${city || ''}${county || ''}${address || ''}`;
       },
       hideInSearch: true,
     },
@@ -191,7 +161,20 @@ const PointOrder: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
+      valueEnum: {
+        1: { text: '待支付', status: 'Default' },
+        2: { text: '全部支付', status: 'Processing' },
+        3: { text: '已发货', status: 'Processing' },
+        4: { text: '已完成', status: 'Success' },
+      },
+      hideInTable: true,
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
       valueEnum: POINTS_ORDER_STATUS,
+      hideInSearch: true,
     },
     {
       title: '操作',
@@ -203,62 +186,43 @@ const PointOrder: React.FC = () => {
       render: (_, record) => {
         const {
           id,
-          contactName,
-          province,
-          city,
-          county,
-          contactPhone,
-          address,
-          sellerRemark,
+          allowRefund,
         } = record;
         return <>
           <Button type={`link`} onClick={async () => {
             setDrawerVisible(true);
-            setLoading(true);
-            form.setFieldsValue({
-              contactName,
-              contactPhone,
-              area: province && city && county && [province, city, county],
-              address,
-              sellerRemark,
-            });
+            await fetchGetPointOrderDetail(id);
             setDetailId(id);
-            setRecordInfo(record);
-            setLoading(false);
-          }}>查看</Button>
+          }}>详情</Button>
+          {
+            allowRefund && <Button size={'small'} type={`primary`} onClick={async () => {
+              setRemarkVisible(true);
+              await fetchGetPointOrderDetail(id);
+              setDetailId(id);
+            }}>退款</Button>
+          }
         </>;
       },
     },
   ];
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
 
   const changeRemarkTextArea = (e: any) => {
     setRemark(e.target.value);
-  };
-
-  const changeCurrentExpressCompany = (e: any) => {
-    setCurrentExpressCompany(e.target.value);
   };
 
 
   return <div className={'unusual-order-wrapper'}>
     <PageContainer
       header={{
-        title: '积分发货审单',
+        title: '积分订单',
         breadcrumb: {},
       }}
     >
       <ProTable<OrderAPI.PointCheckDeliverData>
         columns={columns}
         actionRef={actionRef}
-        scroll={{ x: 2000 }}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: onSelectChange,
-        }}
+        scroll={{ x: 3000 }}
         search={{
           labelWidth: 100,
           optionRender: (searchConfig, formProps) => [
@@ -275,7 +239,6 @@ const PointOrder: React.FC = () => {
               key='search'
               onClick={() => {
                 formProps.form?.submit();
-                setSelectedRowKeys([]);
               }}
             >
               {searchConfig.searchText}
@@ -287,134 +250,99 @@ const PointOrder: React.FC = () => {
       />
     </PageContainer>
     <Drawer
-      title={`${recordInfo?.orderCode || '--'}的详情`}
       visible={drawerVisible}
       onClose={() => {
         setDrawerVisible(false);
         form.resetFields();
       }}
-      width={800}
+      width={400}
       destroyOnClose={true}
     >
       <ProDescriptions
-        title={'书袋信息'}
-        dataSource={recordInfo}
+        title={'积分详情'}
+        dataSource={detail}
         loading={loading}
         columns={
           [
             {
-              title: '商品ID:',
+              title: 'id:',
               key: 'id',
               dataIndex: 'id',
             },
 
             {
-              title: '商品名称',
-              key: 'goodsName',
-              dataIndex: 'goodsName',
+              title: '用户信息',
+              key: 'contactName',
+              dataIndex: 'contactName',
             },
             {
-              title: '订单状态',
-              key: 'status',
-              dataIndex: 'status',
-              valueEnum: POINTS_ORDER_STATUS,
-            },
-            {
-              title: '商品数量',
-              key: 'quantity',
-              dataIndex: 'quantity',
-            },
-            {
-              title: '商品所需积分',
-              key: 'points',
-              dataIndex: 'points',
-            },
-            {
-              title: '积分折扣',
-              key: 'discountPoints',
-              dataIndex: 'discountPoints',
-            },
-            {
-              title: '实付积分',
-              key: 'payPoints',
-              dataIndex: 'payPoints',
-            },
-            {
-              title: '商品所需金额',
-              key: 'amount',
-              dataIndex: 'amount',
-            },
-            {
-              title: '金额折扣',
-              key: 'discountAmount',
-              dataIndex: 'discountAmount',
-            },
-            {
-              title: '实付金额',
+              title: '支付金额',
               key: 'payAmount',
               dataIndex: 'payAmount',
+              valueType: 'money',
             },
             {
-              title: '创建时间',
-              key: 'createTime',
-              dataIndex: 'createTime',
-              valueType: 'dateTime',
+              title: '支付积分',
+              key: 'payPoint',
+              dataIndex: 'payPoint',
+              render: (text) => {
+                return `${text}积分`;
+              },
             },
             {
               title: '支付时间',
-              key: 'paidTime',
-              dataIndex: 'paidTime',
+              key: 'payTime',
+              dataIndex: 'payTime',
               valueType: 'dateTime',
             },
-
           ]
         }
-        column={2}
+        column={1}
       />
-      <div className='ant-descriptions-title' style={{ marginBottom: 20 }}>收货地址</div>
-      <Form
-        {...formItemLayout}
-        form={form}
-      >
-        <Form.Item label={'收货人姓名'} name={'contactName'}>
-          <Input />
-        </Form.Item>
-        <Form.Item label={'收货人电话'} name={'contactPhone'}>
-          <Input />
-        </Form.Item>
-        <Form.Item name='area' label={'省市区'}>
-          <Cascader options={cityOptions} placeholder=' 请填写省市区' />
-        </Form.Item>
-        <Form.Item name='address' label='地址'>
-          <Input placeholder={'请填写地址'} />
-        </Form.Item>
-        <Form.Item label={'备注'} name={'sellerRemark'}>
-          <Input />
-        </Form.Item>
-      </Form>
-    </Drawer>
+      {
+        detail?.status === -30 && <ProDescriptions
+          dataSource={detail}
+          loading={loading}
+          columns={
+            [
+              {
+                title: '退款金额',
+                key: 'refundAmount',
+                dataIndex: 'refundAmount',
+                valueType: 'money',
+              },
 
-    <Modal
-      title='修改默认快递'
-      visible={currentExpressCompanyModalVisible}
-      footer={null}
-      onCancel={() => setCurrentExpressCompanyModalVisible(false)}>
-      <Radio.Group
-        onChange={changeCurrentExpressCompany}
-        value={currentExpressCompany}>
-        {EXPRESS_COMPANY.map((i) => (
-          <Radio value={i.value} key={i.value}>
-            {i.name}
-          </Radio>
-        ))}
-      </Radio.Group>
-    </Modal>
+              {
+                title: '退款积分',
+                key: 'refundPoint',
+                dataIndex: 'refundPoint',
+                render: (text) => {
+                  return `${text}积分`;
+                },
+              },
+              {
+                title: '退款时间',
+                key: 'refundTime',
+                dataIndex: 'refundTime',
+                valueType: 'dateTime',
+              },
+              {
+                title: '操作人',
+                key: 'refundStaffName',
+                dataIndex: 'refundStaffName',
+              },
+            ]
+          }
+          column={1}
+        />
+      }
+    </Drawer>
     <Modal
       title='填写备注'
       confirmLoading={submitLoading}
       onCancel={() => setRemarkVisible(false)}
       onOk={async () => {
-        // await fetchAuditPointsOrderUnusual({ sellerRemark: remark, pointsOrderId: detailId });
+        await fetchRefundPointOrder({ remark, pointsGoodsOrderId: detailId });
         setRemarkVisible(false);
         actionRef?.current?.reload();
       }}
@@ -422,7 +350,7 @@ const PointOrder: React.FC = () => {
       forceRender={true}
       destroyOnClose={true}
     >
-      <TextArea onChange={changeRemarkTextArea} />
+      <TextArea onChange={changeRemarkTextArea} placeholder={'请在退款前与用户、仓库、物流进行必要的沟通'} />
     </Modal>
   </div>;
 };

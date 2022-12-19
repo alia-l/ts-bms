@@ -19,6 +19,7 @@ const Settings: LayoutSettings & {
   menu: {
     locale: false,
   },
+  splitMenus: true
 };
 
 export default Settings;

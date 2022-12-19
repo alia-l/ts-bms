@@ -1,13 +1,15 @@
-import React, { useRef } from 'react';
-import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import React, { useEffect, useRef } from 'react';
+import { ActionType, PageContainer, ProColumns, ProFormInstance, ProTable } from '@ant-design/pro-components';
 import { Button, Tag } from 'antd';
 import { useModel } from '@@/plugin-model/useModel';
 import { GOODS_IN_STATUS, RETURN_STATUS, SHIPPING_STATUS } from '@/conf/conf';
 import { history } from 'umi';
 
-const ReturnOrderManagement: React.FC = () => {
+const ReturnOrderManagement: React.FC = (props) => {
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<ProFormInstance>();
   const { fetchGetReturnOrderList } = useModel('returnOrderModel');
+  const { updateReturnOrderSearchProps, returnOrderSearchProps } = useModel('index');
   const columns: ProColumns<OrderAPI.ReturnOrderListData>[] = [
     {
       title: '用户手机号',
@@ -162,6 +164,23 @@ const ReturnOrderManagement: React.FC = () => {
     },
   ];
 
+  const initData = () => {
+    // @ts-ignore
+    const { query } = props.location;
+    if (query) {
+      if (query.back === 'success') {
+        formRef?.current?.setFieldsValue(returnOrderSearchProps);
+        setTimeout(() => {
+          actionRef.current?.reload();
+        }, 100);
+      }
+    }
+  };
+
+  useEffect(() => {
+    initData();
+  }, []);
+
 
   return <div>
     <PageContainer
@@ -171,9 +190,15 @@ const ReturnOrderManagement: React.FC = () => {
       }}
     >
       <ProTable<OrderAPI.ReturnOrderListData>
+        formRef={formRef}
         columns={columns}
         actionRef={actionRef}
         scroll={{ x: 2500 }}
+        params={returnOrderSearchProps}
+        beforeSearchSubmit={(params) => {
+          updateReturnOrderSearchProps(params);
+          return params;
+        }}
         search={{
           collapsed: false,
           collapseRender: () => null,

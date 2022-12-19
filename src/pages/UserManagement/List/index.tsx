@@ -84,7 +84,10 @@ const UserList: React.FC = () => {
 
 
     return (
-      <PageContainer>
+      <PageContainer  header={{
+        title: '用户中心',
+        breadcrumb: {},
+      }}>
         <ProTable<UserAPI.UserListData>
           columns={columns}
           actionRef={actionRef}

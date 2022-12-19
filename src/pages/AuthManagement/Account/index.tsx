@@ -133,7 +133,10 @@ const AccountManagement: React.FC = () => {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer   header={{
+      title: '账号管理',
+      breadcrumb: {},
+    }}>
       <ProTable<UserAPI.AccountData>
         columns={columns}
         actionRef={actionRef}

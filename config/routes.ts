@@ -1,35 +1,36 @@
 export default [
   { name: '登录', path: '/login', component: './Login', layout: false },
-
   //子页路由
   { name: '用户详情', path: '/user/detail/:id/:phone', component: './UserManagement/Detail' },
   { name: '购买订单详情', path: '/purchase/detail/:id', component: './StorageManagement/PurchaseOrder/detail' },
   { name: '报损订单详情', path: '/reportDamage/detail/:id', component: './StorageManagement/ReportDamageOrder/detail' },
   { name: '追损订单详情', path: '/chaseDamage/detail/:id', component: './StorageManagement/ChaseDamageOrder/detail' },
   { name: '回收订单详情', path: '/returnOrder/detail/:id', component: './StorageManagement/ReturnOrder/detail' },
+  { name: '自寄订单详情', path: '/shelfOrderDetail/detail/:id', component: './StorageManagement/ShelfReturnOrder/detail' },
+  { name: '质检复核订单详情', path: '/reCheckListOrder/detail/:id/:status', component: './StorageManagement/ReCheckListOrder/detail' },
 
   //菜单路由
   {
-    name: '用户管理',
+    name: '用户',
     path: '/user',
     key: 'user_list',
     component: './UserManagement/List',
     showMenu: true,
   },
   {
-    name: '订阅中心',
+    name: '订阅',
     path: '/order',
     key: 'order',
     showMenu: true,
     routes: [
       {
-        name: '书袋管理',
+        name: '书袋',
         path: '/order/bag/list',
         key: 'bag_list',
         component: './OrderManagement/BagOrder',
       },
       {
-        name: '订阅管理',
+        name: '订阅',
         path: '/order/subscribe/list',
         key: 'subscribe_list',
         component: './OrderManagement/Subscribe',
@@ -43,7 +44,7 @@ export default [
     ],
   },
   {
-    name: '工单中心',
+    name: '工单',
     path: '/work',
     key: 'work_order',
     showMenu: true,
@@ -69,63 +70,111 @@ export default [
     ],
   },
   {
-    name:'仓储管理',
+    name:'仓储',
     path: '/storage',
     key:'storage',
     showMenu: true,
     routes: [
       {
-        name:'购买订单',
+        name:'购买单',
         path:'/storage/purchaseOrder',
         key:'purchase_order_list',
         component:'./StorageManagement/PurchaseOrder'
       },
       {
-        name:'报损订单',
+        name:'报损单',
         path:'/storage/reportDamageOrder',
         key:'report_damage_list',
         component:'./StorageManagement/ReportDamageOrder'
       },
       {
-        name:'追损订单',
+        name:'追损单',
         path:'/storage/chaseDamageOrder',
         key:'damage_list',
         component:'./StorageManagement/ChaseDamageOrder'
       },
       {
-        name:'入库订单',
+        name:'入库单',
         path:'/storage/goodsInOrder',
         key:'goods_in_list',
         component:'./StorageManagement/GoodsInOrder'
       },
       {
-        name:'回收订单',
+        name:'回收单',
         path:'/storage/returnOrder',
         key:'return_list',
         component:'./StorageManagement/ReturnOrder'
       },
+      {
+        name:'自寄单',
+        path:'/storage/shelfReturnOrder',
+        key:'shelf_return_list',
+        component:'./StorageManagement/ShelfReturnOrder'
+      },
+      {
+        name:'质检复核',
+        path:'/storage/reCheckListOrder',
+        key:'quality_control_recheck_list',
+        component:'./StorageManagement/ReCheckListOrder'
+      },
+      {
+        name:'发货审单',
+        path:'/storage/checkDeliverOrder',
+        key:'check_deliver_list',
+        component:'./StorageManagement/CheckDeliverOrder'
+      },
+      {
+        name:'积分发货审单',
+        path:'/storage/pointOrderDeliverOrder',
+        key:'points_order_check_deliver_list',
+        component:'./StorageManagement/PointCheckDeliverOrder'
+      },
+      {
+        name:'大礼包发货审单',
+        path:'/storage/giftOrderCheckDeliver',
+        key:'gdd_order_check_deliver_list',
+        component:'./StorageManagement/GiftCheckDeliverOrder'
+      },
+      {
+        name:'积分订单',
+        path:'/storage/pointsOrder',
+        key:'points_order_list',
+        component:'./StorageManagement/PointOrder'
+      },
+      {
+        name:'实体卡',
+        path:'/storage/entityCard',
+        key:'entity_card_list',
+        component:'./StorageManagement/EntityCard'
+      },
+      {
+        name:'rfid出库记录',
+        path:'/storage/rfidDelivery',
+        key:'rfid_record',
+        component:'./StorageManagement/RfidDelivery'
+      },
     ]
   },
   {
-    name: '权限管理',
+    name: '权限',
     path: '/auth',
     key: 'auth',
     showMenu: true,
     routes: [
       {
-        name: '角色管理',
+        name: '角色',
         path: '/auth/role',
         key: 'auth_role',
         component: './AuthManagement/Role',
       },
       {
-        name: '账号管理',
+        name: '账号',
         path: '/auth/account',
         key: 'auth_account',
         component: './AuthManagement/Account',
       },
       {
-        name: '日志管理',
+        name: '日志',
         path: '/auth/journal',
         key: 'auth_journal',
         component: './AuthManagement/Journal',

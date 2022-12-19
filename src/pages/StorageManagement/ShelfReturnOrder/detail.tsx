@@ -1,248 +1,69 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useModel } from 'umi';
-import {
-  ActionType,
-  EditableProTable,
-  PageContainer,
-  ProCard,
-  ProColumns,
-  ProDescriptions,
-} from '@ant-design/pro-components';
+import React, { useEffect, useState } from 'react';
+import { useModel } from '@@/plugin-model/useModel';
+import { PageContainer, ProCard, ProColumns, ProDescriptions, ProTable } from '@ant-design/pro-components';
+import { GOODS_IN_STATUS, RETURN_STATUS, SHIPPING_STATUS } from '@/conf/conf';
+import { Alert, Button, Divider, Input, Modal, Space, Tag } from 'antd';
 import GoBack from '@/components/GoBack';
-import { CHASE_DAMAGE_STATUS, OSS_DIR, PROCESS_DAMAGE_STATUS } from '@/conf/conf';
-import { PhotoProvider, PhotoView } from 'react-photo-view';
-import { Button, Form, Input, Modal, Select, Space } from 'antd';
-import 'react-photo-view/dist/react-photo-view.css';
-import OSSUpLoad from '@/components/OssUpLoad';
 
-const { TextArea } = Input;
 const { confirm } = Modal;
-const { Option } = Select;
 
-const ChaseDamageOrderDetail: React.FC = (props) => {
-  const [form] = Form.useForm();
-  const actionRef = useRef<ActionType>();
+const ShelfOrderDetail: React.FC = (props) => {
   const {
-    fetchGetDamageInfoDetail,
-    fetchUpdateDamageInfo,
-    fetchRefundDamageSubOrder,
+    fetchGetReturnOrderDetail,
+    fetchManualSignIn,
+    fetchAddGoodsIn,
+    fetchCancelAppointment,
+    fetchCancelReturnOrderForce,
     detail,
-    fetchCancelDamageSubOrder,
-  } = useModel('chaseDamageOrderModel');
+    submitLoading,
+    loading,
+  } = useModel('returnOrderModel');
   const [detailId, setDetailId] = useState<number>();
+  const [confirmModalVisible, setConfirmModalVisible] = useState<boolean>(false);
+  const [remark, setRemark] = useState<string>('');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [refundModalVisible, setRefundModalVisible] = useState<boolean>(false);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [refundRemark, setRefundRemark] = useState<string>('');
-  const columns: ProColumns<OrderAPI.ChaseDamageDetailData_subOrderList>[] = [
-    {
-      title: '报损图片(点击看大图)',
-      dataIndex: 'imgList',
-      width: isEdit ? 400 : 200,
-      key: 'imgList',
-      render: (_, record) => {
-        const { imgList } = record;
-        return <PhotoProvider maskOpacity={0.5}>
-          {
-            (imgList || []).map((it) => (
-              <PhotoView src={it} key={it}>
-                <img src={it} alt={''} width={50} height={50} style={{ margin: 5 }} />
-              </PhotoView>
-            ))
-          }
-        </PhotoProvider>;
-      },
-      renderFormItem: (_, { isEditable }) => {
-        setIsEdit(isEditable as boolean);
-        return <OSSUpLoad listType={'picture-card'} path={OSS_DIR.damageImg} type={'img'}
-                          max={10} />;
-      },
-    },
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      editable: false,
-      width: 80,
-    },
-    {
-      title: '绘本名称',
-      dataIndex: 'productName',
-      key: 'productName',
-      width: 250,
-      editable: false,
-    },
-    {
-      title: '绘本编号',
-      dataIndex: 'productNo',
-      key: 'productNo',
-      editable: false,
-      width: 120,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      editable: false,
-      width: 170,
-      valueEnum: {
-        '-20': { text: '客服追损复核驳回', status: 'Error' },
-        '-15': { text: '已退款', status: 'Error' },
-        '-10': { text: '运营取消订单', status: 'Error' },
-        0: { text: '待支付', status: 'Default' },
-        10: { text: '已支付', status: 'Success' },
-        50: { text: '已完成', status: 'Success' },
-      },
-    },
-    {
-      title: '总价',
-      dataIndex: 'amount',
-      key: 'amount',
-      editable: false,
-      valueType: 'money',
-      width: 100,
-    },
-    {
-      title: '售价',
-      dataIndex: 'salePrice',
-      key: 'salePrice',
-      editable: false,
-      valueType: 'money',
-      width: 100,
-    },
-    {
-      title: ' 支付金额',
-      dataIndex: 'payAmount',
-      key: 'payAmount',
-      editable: false,
-      valueType: 'money',
-      width: 100,
-    },
-    {
-      title: '用户备注',
-      dataIndex: 'sellerRemark',
-      key: 'sellerRemark',
-      renderFormItem: () => {
-        return <TextArea rows={4} />;
-      },
-    },
-    {
-      title: '仓库备注',
-      dataIndex: 'buyerRemark',
-      key: 'buyerRemark',
-      renderFormItem: () => {
-        return <TextArea rows={4} />;
-      },
-    },
-    {
-      title: '操作',
-      valueType: 'option',
-      fixed: 'right',
-      width: 200,
-      render: (_, record, text, action) => {
-        const { id, status } = record;
-        return [
-          <Button type={'link'} key={'edit'} size={'small'} onClick={() => {
-            action?.startEditable?.(id);
-          }}>
-            修改备注
-          </Button>,
-          <Button
-            danger
-            type={'primary'}
-            key={'cancel'}
-            size={'small'}
-            disabled={
-              (detail?.subOrderList || []).length === 1 ||
-              status !== 0 ||
-              detail?.status !== 0
-            }
-            onClick={async () => {
-              confirm({
-                title: '是否要取消该绘本的追损',
-                okText: '确定',
-                cancelText: ' 取消',
-                onOk: async () => {
-                  await fetchCancelDamageSubOrder(id);
-                  actionRef?.current?.reload();
-                },
-              });
-            }}
-          >取消追损</Button>,
-        ];
-      },
-    },
+
+  const columns: ProColumns<OrderAPI.ReturnOrderDetailData_goodsList>[] = [
+    { title: '商品编码', dataIndex: 'bookNo', key: 'bookNo' },
+    { title: '商品名称', dataIndex: 'saleTitle', key: 'saleTitle' },
+    { title: 'isbn', dataIndex: 'isbn', key: 'isbn' },
+    { title: '原价', dataIndex: 'marketPrice', key: 'marketPrice', valueType: 'money' },
+    { title: '售价', dataIndex: 'salePrice', key: 'salePrice', valueType: 'money' },
+    { title: '入库编码', dataIndex: 'goodsSequenceNo', key: 'goodsSequenceNo' },
+    { title: '备注', dataIndex: 'remark', key: 'remark' },
+
   ];
+
   useEffect(() => {
     // @ts-ignore
     const { id } = props.match.params;
     setDetailId(id);
-    fetchGetDamageInfoDetail(id);
+    fetchGetReturnOrderDetail(id);
   }, []);
-
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const changeRefundTextArea = (e: any) => {
+  const changeInput = (e: any) => {
     const { value } = e.target;
-    setRefundRemark(value);
+    setRemark(value);
   };
 
-  /**
-   * @description 验收
-   */
-  const submitInfo = async () => {
-    const values = await form.validateFields();
-    const params: OrderAPI.UpdateDamageInfoParams = {
-      id: detailId as number,
-      ...values,
+  const submitConfirm = async () => {
+    const params: OrderAPI.ManualSignInParams = {
+      returnOrderId: detailId as number,
+      remark,
     };
-    await fetchUpdateDamageInfo(params);
-    await fetchGetDamageInfoDetail(detailId as number);
+    await fetchManualSignIn(params);
+    setConfirmModalVisible(false);
+    await fetchGetReturnOrderDetail(detailId as number);
   };
 
-  /**
-   * @description 更新信息
-   */
-  const submitUpdateInfo = async (data: OrderAPI.ChaseDamageDetailData_subOrderList) => {
-    const { id, imgList, sellerRemark, buyerRemark } = data;
-    const params: OrderAPI.UpdateDamageInfoParams = {
-      id: detailId as number,
-      subOrderList: [
-        {
-          id,
-          imgList: imgList,
-          sellerRemark,
-          buyerRemark,
-        },
-      ],
-    };
-    await fetchUpdateDamageInfo(params);
-    await fetchGetDamageInfoDetail(detailId as number);
-  };
-
-  /**
-   * @description 批量退款
-   */
-  const submitRefundInfo = async () => {
-    const params: OrderAPI.RefundDamageParams = {
-      orderCode: detail?.orderCode as string,
-      staffRemark: refundRemark,
-      damageSubOrderIds: selectedRowKeys as number[],
-    };
-    await fetchRefundDamageSubOrder(params);
-    await fetchGetDamageInfoDetail(detailId as number);
-  };
-
-
-  return <PageContainer
-    content={<GoBack path={'/storage/ChaseDamageOrder'} />}>
-    <ProCard>
-      <ProDescriptions<OrderAPI.ChaseDamageDetailData>
-        title={'订单信息'}
+  return <PageContainer content={<GoBack path={'/storage/returnOrder'} />}>
+    <ProCard loading={loading}>
+      <ProDescriptions
+        title={'基础信息'}
         dataSource={detail}
         columns={
           [
@@ -256,10 +77,10 @@ const ChaseDamageOrderDetail: React.FC = (props) => {
               },
             },
             {
-              title: '状态',
-              dataIndex: 'status',
-              key: 'status',
-              valueEnum: CHASE_DAMAGE_STATUS,
+              title: '创建时间',
+              key: 'createTime',
+              dataIndex: 'createTime',
+              valueType: 'dateTime',
             },
             {
               title: '订单编码',
@@ -268,10 +89,12 @@ const ChaseDamageOrderDetail: React.FC = (props) => {
               copyable: true,
             },
             {
-              title: '书袋序号',
-              key: 'sequence',
-              dataIndex: 'sequence',
+              title: '支付时间',
+              key: 'createTime',
+              dataIndex: 'createTime',
+              valueType: 'dateTime',
             },
+
             {
               title: '书袋编码',
               key: 'bagOrderCode',
@@ -279,133 +102,245 @@ const ChaseDamageOrderDetail: React.FC = (props) => {
               copyable: true,
             },
             {
-              title: '追损退款金额',
-              key: 'amount',
-              dataIndex: 'amount',
-              valueType: 'money',
-            },
-            {
-              title: '创建时间',
-              key: 'createTime',
-              dataIndex: 'createTime',
+              title: '预约取件时间',
+              key: 'pickupTime',
+              dataIndex: 'pickupTime',
               valueType: 'dateTime',
             },
             {
-              title: '质检人',
-              key: 'staffName',
-              dataIndex: 'staffName',
+              title: '书袋序号',
+              key: 'sequence',
+              dataIndex: 'sequence',
+            },
+            {
+              title: '状态',
+              key: 'returnStatus',
+              dataIndex: 'returnStatus',
+              valueEnum: RETURN_STATUS,
             },
           ]
         }
         column={2}
       />
-    </ProCard>
-    <ProCard style={{ marginTop: 16, marginBottom: 16 }}>
-      <ProDescriptions<OrderAPI.ChaseDamageDetailData>
-        title={'支付信息'}
+      <Divider />
+      <ProDescriptions
         dataSource={detail}
-        column={2}
         columns={[
           {
-            title: '流水号',
-            key: 'outTradeNo',
-            dataIndex: 'outTradeNo',
+            title: '联系人姓名',
+            dataIndex: 'contactName',
+            key: 'contactName',
+            render: (text, record) => {
+              return `${text || '-'}/${record.contactPhone || '-'}`;
+            },
           },
           {
-            title: '应付金额',
-            key: 'payAmount',
-            dataIndex: 'payAmount',
-            valueType: 'money',
+            title: '取件信息',
+            key: 'address',
+            dataIndex: 'address',
+            render: (text, record) => {
+              const { province, city, county } = record;
+              return `${province}${city}${county}${text}`;
+            },
           },
           {
-            title: '支付时间',
-            key: 'paidTime',
-            dataIndex: 'paidTime',
-            valueType: 'dateTime',
-          },
-          {
-            title: '实付金额',
-            key: 'paidAmount',
-            dataIndex: 'paidAmount',
-            valueType: 'money',
-          },
-          {
-            title: '折扣金额',
-            key: 'discountAmount',
-            dataIndex: 'discountAmount',
-            valueType: 'money',
+            title: '订单备注',
+            key: 'sellerRemark',
+            dataIndex: 'sellerRemark',
           },
         ]}
+        column={1}
       />
     </ProCard>
-    <EditableProTable<OrderAPI.ChaseDamageDetailData_subOrderList>
-      actionRef={actionRef}
+    <ProCard ghost gutter={16}>
+      <ProCard style={{ marginTop: 16 }} colSpan='50%' loading={loading}>
+        <ProDescriptions
+          title={'物流信息'}
+          dataSource={detail}
+          columns={[
+            {
+              title: '物流公司',
+              key: 'expressCompany',
+              dataIndex: 'expressCompany',
+            },
+            {
+              title: '到仓时间',
+              key: 'shippingReceiveTime',
+              dataIndex: 'shippingReceiveTime',
+              valueType: 'dateTime',
+            },
+            {
+              title: '物流单号',
+              key: 'expressNo',
+              dataIndex: 'expressNo',
+            },
+            {
+              title: '快递揽收时间',
+              key: 'shippingDeliverTime',
+              dataIndex: 'shippingDeliverTime',
+              valueType: 'dateTime',
+            },
+            {
+              title: '物流状态',
+              key: 'shippingStatus',
+              dataIndex: 'shippingStatus',
+              render: (text) => {
+                return (
+                  SHIPPING_STATUS.find((it) => it.value === text) ||
+                  {}
+                ).name || '--';
+              },
+            },
+          ]}
+          column={2}
+        />
+      </ProCard>
+      <ProCard style={{ marginTop: 16, marginBottom: 16, paddingBottom: 80 }} loading={loading}>
+        <ProDescriptions
+          title={'报损信息'}
+          dataSource={detail}
+          columns={[
+            {
+              title: '报损订单',
+              dataIndex: 'damageReportCode',
+              key: 'damageReportCode',
+              render: (text) => {
+                return text ?
+                  <Button type='link' onClick={() => {
+
+                  }
+                  }>{text}</Button> : <Tag>无报损</Tag>;
+              },
+            },
+          ]}
+        />
+      </ProCard>
+    </ProCard>
+    {
+      detail && ((detail?.status >= 10 && detail?.status < 50) || detail?.status === -2) && <Alert
+        showIcon
+        message={
+          <div>
+            当前包裹系统物流状态为未签收，是否已经实际到仓已签收?
+            <Button
+              type='link'
+              size={'small'}
+              onClick={() => setConfirmModalVisible(true)}
+            >
+              确认到仓
+            </Button>
+          </div>
+        }
+        type='info'
+      />
+    }
+    <ProTable<OrderAPI.ReturnOrderDetailData_goodsList>
+      headerTitle={'回收单内容'}
+      search={false}
+      columns={columns}
+      dataSource={detail?.goodsList}
       rowKey='id'
-      headerTitle={
-        <Space>
-          <span>追损内容</span>
-          <Button size={'small'} type={'primary'} onClick={() => setModalVisible(true)}>验收</Button>
-        </Space>
-      }
+      loading={loading}
+      pagination={false}
       rowSelection={{
         selectedRowKeys,
         onChange: onSelectChange,
-        getCheckboxProps: (record) => ({
-          disabled: record.status !== 10
-        })
+        getCheckboxProps: record => ({
+          disabled: record.status !== 0 && record.status !== 3 && record.bookNo.indexOf('BOX') === -1,
+        }),
       }}
       tableAlertOptionRender={() => {
         return (
           <Space size={16}>
-            <a onClick={() => setRefundModalVisible(true)}>批量退款</a>
+            <a onClick={() => {
+              confirm({
+                title: '是否要验收回收单',
+                onOk: async () => {
+                  const params: OrderAPI.AddGoodsInParams = {
+                    productIdList: selectedRowKeys as number[],
+                    goodsInOrderId: detail?.goodsInOrder.id || '',
+                    returnOrderId: detail?.id as number,
+                  };
+                  await fetchAddGoodsIn(params);
+                  await fetchGetReturnOrderDetail(detailId as number);
+                  setSelectedRowKeys([]);
+                },
+              });
+            }
+            }>验收通过</a>
+            <a style={{ color: '#ff4d4f' }}>复核</a>
           </Space>
         );
       }}
-      scroll={{ x: 2000 }}
-      value={detail?.subOrderList}
-      columns={columns}
-      recordCreatorProps={false}
-      editable={{
-        onSave: async (_, data) => submitUpdateInfo(data),
-        actionRender: (row, config, defaultDom) => {
-          return [
-            defaultDom.save,
-            defaultDom.cancel
-          ];
-        },
-      }}
     />
-    <Modal
-      title={'追损验收'}
-      visible={modalVisible}
-      onCancel={() => setModalVisible(false)}
-      forceRender={true}
-      onOk={() => submitInfo()}
-    >
-      <Form form={form}>
-        <Form.Item label={'验收状态'} name={'status'}>
-          <Select>
+    <ProCard ghost gutter={16}>
+      <ProCard style={{ marginTop: 16 }} loading={loading} colSpan='50%'>
+        <ProDescriptions
+          title={'关联订单'}
+          dataSource={detail?.goodsInOrder}
+          column={2}
+          columns={[
             {
-              PROCESS_DAMAGE_STATUS.map((it) => (
-                <Option value={it.value} key={it.value}>{it.name}</Option>
-              ))
-            }
-          </Select>
-        </Form.Item>
-        <Form.Item label={'验收备注'} name={'sellerRemark'}>
-          <TextArea />
-        </Form.Item>
-      </Form>
-    </Modal>
+              title: '订单',
+              dataIndex: 'orderCode',
+              key: 'orderCode',
+            },
+            {
+              title: '入库编码',
+              dataIndex: 'wmsOrderCode',
+              key: 'wmsOrderCode',
+            },
+            {
+              title: '状态',
+              dataIndex: 'status',
+              key: 'status',
+              valueEnum: GOODS_IN_STATUS,
+            },
+          ]}
+        />
+      </ProCard>
+      <ProCard title={'特殊操作'} style={{ marginTop: 16, paddingBottom: 50 }}>
+        <Button type={'primary'} style={{ marginRight: 16 }} onClick={() => {
+          confirm({
+            title: '提醒',
+            content: '是否要取消回收单',
+            okText: '确定',
+            cancelText: ' 取消',
+            onOk: async () => {
+              await fetchCancelAppointment(detail?.orderCode as string);
+              await fetchGetReturnOrderDetail(detailId as number);
+            },
+          });
+        }}>取消预约</Button>
+        <Button type={'primary'} danger ghost onClick={() => {
+          confirm({
+            title: '提醒',
+            content: '是否要取消快递预约',
+            okText: '确定',
+            cancelText: ' 取消',
+            onOk: async () => {
+              await fetchCancelReturnOrderForce({
+                code: detail?.bagOrderCode, type: 1,
+              });
+              await fetchGetReturnOrderDetail(detailId as number);
+            },
+          });
+        }}>取消快递预约</Button>
+      </ProCard>
+    </ProCard>
+
+
     <Modal
-      title={'退款说明'}
-      visible={refundModalVisible}
-      onCancel={() => setRefundModalVisible(false)}
+      title={'填写手动签收备注'}
+      visible={confirmModalVisible}
       destroyOnClose={true}
-      onOk={() => submitRefundInfo()}
+      onOk={() => submitConfirm()}
+      confirmLoading={submitLoading}
     >
-      <TextArea onChange={changeRefundTextArea} />
+      <Input placeholder={'备注'} onChange={changeInput} />
     </Modal>
+
+
   </PageContainer>;
 };
-export default ChaseDamageOrderDetail;
+export default ShelfOrderDetail;

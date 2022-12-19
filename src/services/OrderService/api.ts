@@ -351,8 +351,8 @@ export function getDamageReportList(params: OrderAPI.ReportDamageOrderListParams
 
 /**
  * @description 完成积分补偿
- * @param params
  * @returns {*}
+ * @param bagOrderCodeList
  */
 export function completePointsCompensation(bagOrderCodeList: string) {
   return fetch(`/order/bms/damage_report/complete_points_compensation`, {
@@ -482,8 +482,8 @@ export function damageReportV2(params: OrderAPI.StaffReportParams) {
 
 /**
  * @desc 获取追损列表
- * @param data
  * @returns {Promise}
+ * @param params
  */
 export function getDamageList(params: OrderAPI.ChaseDamageParams) {
   return fetch('/order/bms/damage_order/list', {
@@ -623,6 +623,353 @@ export function getReturnOrderDetail(returnOrderId: number) {
     },
   });
 }
+
+/**
+ * @desc 手动更新
+ * @returns
+ * @param params
+ */
+export function manualSignIn(params: OrderAPI.ManualSignInParams) {
+  return fetch('/order/bms/return_order/manual_sign_in', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 验收入库
+ * @returns {Promise}
+ * @param params
+ */
+export function addGoodsIn(params: OrderAPI.AddGoodsInParams) {
+  return fetch('/order/bms/goods_in_order/inspect', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取审核发单列表
+ * @returns
+ * @param params
+ */
+export function getAuditBagList(params: any) {
+  return fetch('/order/bms/bag_order/audit_bag_List', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+
+/**
+ * @desc 取消预约
+ * @param {string} [orderCode=""]
+ * @returns
+ */
+export function cancelAppointment(orderCode: string) {
+  return fetch(`/order/bms/return_order/cancel_appointment_v2/${orderCode}`, {
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 强制取消快递预约
+ * @param params
+ * @returns {*}
+ */
+export function cancelReturnOrderForce(params = {}) {
+  return fetch(`/order/bms/return_order/force_cancel_return_order`, {
+    params: { ...params },
+  });
+}
+
+/**
+ * @desc 获取自寄单列表
+ * @param {*} [params={}]
+ * @returns
+ */
+export function getSelfReturnOrderList(params: OrderAPI.ShelfReturnOrderParams) {
+  return fetch('/order/bms/selfReturnOrder/return_list', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 批量完成自寄订单
+ * @param {*} [params={}]
+ * @returns
+ */
+export function completeSelfOrder(params: any) {
+  return fetch('/order/bms/selfReturnOrder/complete_self_order', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+
+/**
+ * @desc 导出自寄订单
+ * @param {*} [params={}]
+ * @returns
+ */
+export function exportShelfReturnExl(params = {}) {
+  return fetch('/order/bms/selfReturnOrder/export_return_list', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 复核列表V2
+ * @returns
+ * @param params
+ */
+export function reCheckListV2(params = {}) {
+  return fetch('/order/bms/goods_in_order/re_check_listV2', {
+    method: 'POST',
+    data: { ...params },
+  });
+}
+
+
+/**
+ * @description 获取质检复核详情
+ * @param params
+ * @returns {*}
+ */
+export function getReCheckDetail(params: OrderAPI.ReCheckOrderDetailParams) {
+  return fetch(`/order/bms/goods_in_order/re_check_detail`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 提交复核
+ * @returns
+ * @param params
+ */
+export function submitReCheck(params: OrderAPI.SubmitReCheckParams) {
+  return fetch('/order/bms/goods_in_order/submit_re_check', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 审单标记异常
+ * @param {*} [params={}]
+ * @returns
+ */
+export function markUnusual(params = {}) {
+  return fetch('/order/bms/bag_order/audit_bag_unusual', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 审单详情
+ * @param {string} [bagOrderId='']
+ * @returns
+ */
+export function getAuditBagDetail(bagOrderId: number) {
+  return fetch(`/order/bms/bag_order/audit_bag_info/${bagOrderId}`, {
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 审单详情单独保存用户地址
+ *
+ * @param {*} [params={}]
+ * @returns
+ */
+export function saveUserAddressInCheckDeliver(params: OrderAPI.SaveUserAddressInCheckDeliverParams) {
+  return fetch('/order/bms/bag_order/save_user_address', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 确认审单
+ * @param {*} [params={}]
+ * @returns
+ */
+export function confirmAudit(params: OrderAPI.SaveUserAddressInCheckDeliverParams) {
+  return fetch('/order/bms/bag_order/audit_bag_confirm', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 获取积分订单审单列表
+ * @param params
+ * @returns {*}
+ */
+export function getAuditPointsOrderList(params = {}) {
+  return fetch('/order/bms/point_order/audit_points_order_List', {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 积分订单审单
+ * @param params
+ * @returns {*}
+ */
+export function auditPointsOrderConfirm(params = {}) {
+  return fetch('/order/bms/point_order/audit_points_order_confirm', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 修改积分订单审单信息
+ * @param params
+ * @returns {*}
+ */
+export function editPointsInfo(params = {}) {
+  return fetch(`/order/bms/point_order/audit_points_order_info_update`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 积分订单审单标记异常
+ * @param params
+ * @returns {*}
+ */
+export function auditPointsOrderUnusual(params = {}) {
+  return fetch('/order/bms/point_order/audit_points_order_unusual', {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @desc 获取积分订单
+ * @param params
+ * @returns {undefined}
+ */
+export function getPointsOrderList(params = {}) {
+  return fetch(`/order/bms/point_order/list`, {
+    params: { ...params },
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+/**
+ * @description 获取积分订单详情
+ * @param orderId
+ * @returns {*}
+ */
+export function getPointOrderDetail(orderId: number) {
+  return fetch(`/order/bms/point_order/detail/${orderId}`, {
+    headers: {
+      'v2': true,
+    },
+  });
+}
+
+
+/**
+ * @description 积分商城退款
+ * @param params
+ * @returns {*}
+ */
+export function refundPointOrder(params = {}) {
+  return fetch(`/order/bms/point_order/refund`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'v2': true
+    }
+  })
+}
+
+/**
+ * @description 实体卡订单列表
+ * @param params
+ * @returns {*}
+ */
+export function physicalCardList(params = {}) {
+  return fetch(`/order/bms/physical_card_order/physical_card_list`, {
+    params: { ...params },
+    headers: {
+      'v2': true
+    }
+  })
+}
+
+/**
+ * @description 批量更新订单状态
+ * @param params
+ * @returns {*}
+ */
+export function updateOrderExpressCode(params = {}) {
+  return fetch(`/order/bms/physical_card_order/batch_update_order_express_code`, {
+    params: { ...params },
+    headers: {
+      'v2': true
+    }
+  })
+}
+
+
 
 
 

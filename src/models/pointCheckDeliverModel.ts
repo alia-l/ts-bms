@@ -1,27 +1,22 @@
 import { useCallback, useState } from 'react';
 import {
-  confirmAudit,
-  getAuditBagDetail,
+  auditPointsOrderConfirm, auditPointsOrderUnusual,
+  editPointsInfo,
   getAuditPointsOrderList,
-  markUnusual,
-  saveUserAddressInCheckDeliver,
 } from '@/services/OrderService/api';
 import { message } from 'antd';
 
 export default () => {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [detail, setDetail] = useState<OrderAPI.CheckDeliverDetailData>();
   /**
    * @description 获取书袋列表
    */
   const fetchGetAuditPointsOrderList = useCallback(async (p: any) => {
     const params = {
       pageNum: p.current,
-      size: p.pageSize,
+      pageSize: p.pageSize,
       ...p,
     };
-    delete params.pageSize;
     delete params.current;
     const res: API.Result = await getAuditPointsOrderList(params);
     res.data.forEach((it: any, index: number) => {
@@ -34,10 +29,32 @@ export default () => {
     };
   }, []);
 
-  const fetchMarkUnusual = useCallback(async (p: any) => {
+  /**
+   * @description 获取书袋列表
+   */
+  const fetchGetAuditPointsGiftOrderList = useCallback(async (p: any) => {
+    const params = {
+      pageNum: p.current,
+      pageSize: p.pageSize,
+      goodsTypes: '54,55',
+      ...p,
+    };
+    delete params.current;
+    const res: API.Result = await getAuditPointsOrderList(params);
+    res.data.forEach((it: any, index: number) => {
+      it.key = index.toString();
+    });
+    return {
+      data: res?.data || [],
+      success: res?.resultStatus?.code === 1000,
+      total: res?.dataCount as number,
+    };
+  }, []);
+
+  const fetchAuditPointsOrderConfirm = useCallback(async (p: any) => {
     setSubmitLoading(true);
     try {
-      const res: API.Result = await markUnusual(p);
+      const res: API.Result = await auditPointsOrderConfirm(p);
       if (res) {
         message.success('操作成功');
       } else {
@@ -53,10 +70,10 @@ export default () => {
   }, []);
 
 
-  const fetchSaveUserAddressInCheckDeliver = useCallback(async (p: OrderAPI.SaveUserAddressInCheckDeliverParams) => {
+  const fetchEditPointsInfo = useCallback(async (p: any) => {
     setSubmitLoading(true);
     try {
-      const res: API.Result = await saveUserAddressInCheckDeliver(p);
+      const res: API.Result = await editPointsInfo(p);
       if (res) {
         message.success('操作成功');
       } else {
@@ -71,10 +88,10 @@ export default () => {
 
   }, []);
 
-  const fetchConfirmAudit = useCallback(async (p: OrderAPI.SaveUserAddressInCheckDeliverParams) => {
+  const fetchAuditPointsOrderUnusual= useCallback(async (p: any) => {
     setSubmitLoading(true);
     try {
-      const res: API.Result = await confirmAudit(p);
+      const res: API.Result = await auditPointsOrderUnusual(p);
       if (res) {
         message.success('操作成功');
       } else {
@@ -88,32 +105,14 @@ export default () => {
     }
 
   }, []);
-
-  const fetchGetAuditBagDetail = useCallback(async (bagOrderId: number) => {
-    setLoading(true);
-    try {
-      const res: API.Result = await getAuditBagDetail(bagOrderId);
-      if (res) {
-        const { data } = res || {};
-        setDetail(data);
-      }
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-
-  }, []);
-
 
 
   return {
     fetchGetAuditPointsOrderList,
-    fetchGetAuditBagDetail,
-    fetchMarkUnusual,
-    fetchConfirmAudit,
-    fetchSaveUserAddressInCheckDeliver,
+    fetchAuditPointsOrderConfirm,
+    fetchAuditPointsOrderUnusual,
+    fetchGetAuditPointsGiftOrderList,
+    fetchEditPointsInfo,
     submitLoading,
-    detail,
-    loading
   };
 }

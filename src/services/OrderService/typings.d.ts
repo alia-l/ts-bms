@@ -261,12 +261,412 @@ declare namespace OrderAPI {
     pageNum: number;
     size: number;
   }
+
+  /**
+   * @description 【回收订单-详情-确认到仓】
+   */
+  type ManualSignInParams = {
+    returnOrderId: number
+    remark: string
+  }
+
+  /**
+   * @description 【回收订单-详情-验收通过】
+   */
+  type AddGoodsInParams = {
+    productIdList: number[]
+    goodsInOrderId: number
+    returnOrderId: number
+  }
+
+  /**
+   * @description 【自寄订单-列表】
+   */
+  type ShelfReturnOrderParams = {
+    logisticsNo: string
+    phone: string
+    contactName: string
+    contactPhone: string
+    bagOrderCode: string
+    payStatus: string
+    createTimeStart: string
+    createTimeEnd: string
+  }
+
+  /**
+   * @description 【质检复核-详情】
+   */
+  type ReCheckOrderDetailParams = {
+    bagOrderCode?: string,
+    status?: number,
+    goodsInOrderId: number
+  }
+
+  /**
+   * @description 【质检复核-复核】
+   */
+  type SubmitReCheckParams = {
+    goodsInOrderId: number,
+    submitReCheckSubReqList: SubmitReCheckParams_submitReCheckSubReqList[]
+  }
+
+
+  /**
+   * @description 【质检复核-复核-submitReCheckSubReqList】
+   */
+  type SubmitReCheckParams_submitReCheckSubReqList = {
+    buyerRemark: string
+    goodsInOrderSubId: number
+    type: number
+    remark: string
+    imgList: string[]
+    checkVideoDuration?: string
+    checkVideoUrl?: string
+  }
+
+  /**
+   * @description 【发货审单-更改地址】
+   */
+  type SaveUserAddressInCheckDeliverParams = {
+    address: string
+    bagOrderId: number
+    city: string
+    company: number | string
+    contactName: string
+    contactPhone: string
+    county: string
+    province: string
+    sellerRemark: string
+    area?: any
+  }
+
+
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //------------------------------------------------------------------
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  /**
+   * @description 【实力卡发货】
+   */
+  type GrantCardData = {
+    id?: number,
+    orderCode?: string,
+    cardId?:number,
+    quantity?: number,
+    userId?: number,
+    realName?: string,
+    mobile?: string,
+    country?: null,
+    province?: string,
+    city?: string,
+    county?: string,
+    address?: string,
+    expressNo?: any,
+    payAmount?: number,
+    status?: number,
+    createTime?: number,
+    paidTime?: number,
+    cardName?: any,
+    cardImg?: any,
+    showBindBtn?: any,
+    showBindDetail?: any,
+    statusLabel?: any,
+    expressCode?: any,
+    expressAmount?: number,
+    cardAmount?: number
+  }
+
+
+  /**
+   * @description 【积分订单详情】
+   */
+  type PointOrderDetail = {
+    contactName: string
+    contactPhone: string
+    orderId: number
+    payAmount: number
+    payPoint: number
+    payTime: any
+    refundAmount: number
+    refundPoint: number
+    refundStaffName: any
+    refundTime: any
+    status: number
+  }
+
+  /**
+   * @description 【积分发货审单】
+   */
+  type PointCheckDeliverData = {
+    id: number
+    orderCode: string
+    pointsShopGoodsId: number
+    goodsName: string
+    goodsImgurl: string
+    status: number
+    statusStr: any
+    contactName: any
+    contactPhone: any
+    country: any
+    province: any
+    city: any
+    county: any
+    address: any
+    points: number
+    discountPoints: string
+    payPoints: number
+    amount: number
+    discountAmount: number
+    payAmount: number
+    freight: number
+    buyerRemark: string
+    sellerRemark: any
+    paidTime: any
+    createTime: number
+    expressCode: any
+    expressCompany: any
+    quantity: string
+    type: number
+    userId: number
+    nickname: string
+    phone: string
+    allowRefund: boolean
+  }
+
+  /**
+   * @description 【发货审单详情】
+   */
+  type CheckDeliverDetailData = {
+    id: number
+    sequence: number
+    orderCode: string
+    status: number
+    contactName: any
+    contactPhone: any
+    country: any
+    province: any
+    city: any
+    county: any
+    address: any
+    weight: any
+    auditStaff: number
+    sellerRemark: string
+    suspendRecovery: boolean
+    createTime: number
+    preExpressTime: any
+    confirmTime: any
+    statusStr: string
+    company: any
+    bookVoList: CheckDeliverDetailData_bookVoList[]
+  }
+
+  /**
+   * @description 【发货审单详情-bookVoList】
+   */
+  type CheckDeliverDetailData_bookVoList = {
+    id: number
+    bookNo: string
+    isbn: number
+    isbn10: string
+    saleTitle: string
+    publishTitle: string
+    subTitle: string
+    originTitle: any
+    cost: any
+    salePrice: number
+    marketPrice: number
+    shareReward: any
+    discountRate: any
+    bookRfid: any
+    usedTimes: any
+    author: any
+    description: string
+    coverPicture: string
+    publisher: string
+    pages: number
+    binding: string
+    publishDate: number
+    type: number,
+    status: number
+    weight: number
+    minAge: number
+    maxAge: number
+    totalStock: number
+    orderStock: number
+    deliverStock: number
+    bought: boolean
+    tagArr: any
+    tagNameList: any
+    detailImageArr: any
+    recommendReasonArr: any
+    inPreferList: boolean
+    inReadList: boolean
+    haveStock: boolean
+    haveRightAge: boolean
+    haveChangeBook: boolean
+    appointmented: boolean
+    useCoupon: boolean
+    mustRead: boolean
+    displayOrder: number
+    haveGddAudio: boolean
+
+  }
+
+  /**
+   * @description 【发货审单-响应数据】
+   */
+  type CheckDeliverData = {
+    id: number,
+    orderCode: string
+    createTime: number
+    confirmTime: any
+    contactName: any
+    contactPhone: any
+    country: any
+    province: any
+    city: any
+    county: any
+    address: any
+    bookCount: number
+    statusStr: string
+    status: number
+    auditStatus: string
+    sellerRemark: any
+    sequence: number
+    company: any
+    expressCom: string
+  }
+
+  /**
+   * @description 【质检复核-详情】
+   */
+  type ReCheckOrderDetailData = {
+    id: number,
+    orderCode: string
+    bagOrderId: number
+    returnOrderId: number
+    wmsOrderCode: any
+    expressType: number
+    status: string
+    subOrderList: ReCheckOrderDetailData_subOrderList[],
+    sequence: number
+    userId: number
+    phone: string
+    nickname: string
+    inspectionTime: number
+    bagOrderCode: string
+    returnOrderCode: number
+  }
+
+  /**
+   * @description 【质检复核-详情-subOrderList】
+   */
+  type  ReCheckOrderDetailData_subOrderList = {
+    id: number
+    productId: number
+    productNo: string
+    productName: string
+    status: any
+    inspectionTime: number
+    reCheckTime: any
+    confirmTime: any
+    imgList: string[],
+    hasImg: boolean
+    hasRemark: boolean
+    checkVideoUrl: any
+    checkVideoDuration: any
+    wmsOrderCode: any
+    staffRemark: string
+    buyerRemark: any
+    damageReportOrderCode: any
+    damageReportId: any
+  }
+
+
+  /**
+   * @description 【质检复合-列表】
+   */
+  type ReCheckOrderData = {
+    bagOrderCode: string
+    bagOrderId: number
+    expressType: number
+    id: number
+    inspectionTime: number
+    nickname: any
+    orderCode: string
+    phone: any
+    returnOrderCode: any
+    returnOrderId: number
+    sequence: number
+    status: string
+    subOrderList: ReCheckOrderData_subOrderList[]
+    userId: number
+    wmsOrderCode: any
+  }
+
+  /**
+   * @description 【质检复合-列表-subOrderList】
+   */
+  type ReCheckOrderData_subOrderList = {
+    id: number
+    productId: number
+    productNo: string
+    productName: string
+    status: any
+    inspectionTime: number
+    reCheckTime: any
+    confirmTime: any
+    imgList: string[]
+    hasImg: boolean
+    hasRemark: boolean
+    checkVideoUrl: any
+    checkVideoDuration: any
+    wmsOrderCode: any
+    staffRemark: string
+    damageReportOrderCode: string
+    damageReportId: any
+  }
+
+
+  /**
+   * @description 【自寄订单-列表】
+   */
+  type ShelfReturnOrderData = {
+    alipayId: string
+    alipayName: string
+    bagOrderCode: string
+    bagOrderId: number
+    contactName: string
+    contactPhone: string
+    createTime: string
+    freight: any
+    goodsInStatus: number
+    id: number
+    logisticsNo: string
+    logisticsSync: boolean
+    nextStepFlag: boolean
+    nickname: any
+    orderCode: string
+    payMoney: string
+    payStatus: number
+    payTime: any
+    phone: any
+    pickupTime: any
+    reserveTime: any
+    selfPicList: string
+    sequence: number
+    shippingStatus: any
+    status: number
+    subsidyAmount: string
+    trackingNo: any
+    type: number
+    userId: number
+  }
+
+
   /**
    * @description 【回收订单-详情】响应数据
    */
@@ -287,7 +687,7 @@ declare namespace OrderAPI {
     expressCompany: any
     expressNo: any
     goodsInOrder: any
-    goodsList: ReturnOrderDetailData_goodsList
+    goodsList: ReturnOrderDetailData_goodsList[]
     id: number
     orderCode: string
     nickname: string

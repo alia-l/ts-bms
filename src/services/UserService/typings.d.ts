@@ -94,6 +94,37 @@ declare namespace UserAPI {
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /**
+   * @description 【制作实体卡】
+   */
+  type MakeUoCardData = {
+    avatar: string
+    cerealAmount:number
+    createTime: number
+    equalLevel:any
+    equalNickname:any
+    equalPhone:any
+    equalUserId: any
+    extraCount: number
+    hadAllowed: any
+    id: number
+    level: number
+    nickname: string
+    phone: string
+    realName: string
+    role: number
+    roleValue: string
+    serviceName: string
+    serviceType: number
+    superLevel: number
+    superNickname:string
+    superPhone: string
+    superRealName: string
+    superRole: number
+    superiorId: number
+    unstable: any
+  }
+
+  /**
    * @description 【短信模版-列表】响应数据
    */
   type TextTemplateData = {

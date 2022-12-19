@@ -344,6 +344,7 @@ export const GOODS_IN_SUB_ORDER_STATUS = {
   10: { text: '已入库', status: 'Success' },
 };
 
+// 回收单状态
 export const RETURN_STATUS = {
   '-30': { text: '物流丢件', status: 'Error' },
   '-23': { text: '快递取消', status: 'Error' },
@@ -378,6 +379,47 @@ export const SHIPPING_STATUS: any[] = [
   { name: '已签收', value: 35 },
   { name: '订单关闭', value: 50 },
 ];
+
+// 复核状态
+export const RE_CHECK_STATUS = {
+  1: { text: '待复核', status: 'Default' },
+  2: { text: '待确认', status: 'Processing' },
+  6: { text: '追损复核驳回', status: 'Error' },
+  4: { text: '完成', status: 'Success' },
+};
+
+// 物流公司名称
+export const EXPRESS_COMPANY: any[] = [
+  { name: '圆通速递', value: 1 },
+  { name: '申通快递', value: 2 },
+  { name: '中通快递', value: 3 },
+  { name: '韵达速递', value: 4 },
+  { name: '顺丰速运', value: 5 },
+  { name: 'EMS', value: 6 },
+  { name: '京东', value: 7 },
+  { name: '顺丰丰网', value: 8 },
+];
+
+// 积分订单状态
+export const POINTS_ORDER_STATUS = {
+  '-30': { text: '已退款', status: 'Error' },
+  '-20': { text: '系统取消', status: 'Processing' },
+  '-10': { text: '用户取消', status: 'Processing' },
+  0: { text: '待支付', status: 'Default' },
+  5: { text: '积分已支付', status: 'Processing' },
+  10: { text: '全部支付', status: 'Success' },
+  11: { text: '发货审单异常', status: 'Error' },
+  12: { text: '发货审单', status: 'Processing' },
+  13: { text: '待确认发货', status: 'Processing' },
+  15: { text: '待发货', status: 'Processing' },
+  20: { text: '已发货', status: 'Processing' },
+  30: { text: '已收货', status: 'Processing' },
+  50: { text: '已完成', status: 'Success' },
+};
+
+
+
+
 
 
 

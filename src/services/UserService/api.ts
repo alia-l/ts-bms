@@ -322,5 +322,19 @@ export function sendSmsInfo(params: UserAPI.sendSmsInfoParams) {
   });
 }
 
+/**
+ * @description 获取制作实体卡列表
+ * @param params
+ * @returns {*}
+ */
+export function getCardUserList(params = {}) {
+  return fetch('/user/card_stock/user_list', {
+    params: { ...params },
+    headers: {
+      'v2': true
+    }
+  })
+}
+
 
 
